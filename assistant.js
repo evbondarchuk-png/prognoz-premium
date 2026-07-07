@@ -176,7 +176,9 @@ export function initAssistant(data) {
   injectCss();
   ctxData = data;
   if (document.getElementById('prognosha-fab')) return;
-  const emo = pickFoxEmotion(data);
+  // ?fox=stern — принудительно показать эмоцию (для проверки картинок).
+  const forced = new URLSearchParams(location.search).get('fox');
+  const emo = forced || pickFoxEmotion(data);
 
   const fab = document.createElement('button');
   fab.id = 'prognosha-fab';

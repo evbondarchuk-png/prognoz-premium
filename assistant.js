@@ -83,33 +83,56 @@ const CSS = `
 .p-send{background:var(--petrol);color:#fff;border:none;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
 .p-send:disabled{opacity:.4;cursor:not-allowed}
 .p-typing{font-size:12px;color:var(--muted);padding:4px 8px}
+
+/* Оживление лисы: моргание + дёрганье ушами (работает и в кнопке, и в шапке) */
+.fox-ear{transform-box:fill-box;transform-origin:50% 100%;animation:foxEar 6s ease-in-out infinite}
+.fox-ear-r{animation-delay:.45s}
+@keyframes foxEar{0%,84%,100%{transform:rotate(0)}88%{transform:rotate(-9deg)}92%{transform:rotate(5deg)}96%{transform:rotate(-2deg)}}
+.fox-eye{transform-box:fill-box;transform-origin:50% 50%;animation:foxBlink 4.6s ease-in-out infinite}
+@keyframes foxBlink{0%,92%,100%{transform:scaleY(1)}95%,97%{transform:scaleY(.1)}}
+@media(prefers-reduced-motion:reduce){.fox-ear,.fox-eye,.prognosha-fab{animation:none}}
 `;
 
 // Маскот «Прогноша» — оранжевая лиса. Самописный SVG (корпсеть режет внешние картинки).
-const FOX_SVG = `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="display:block">
-  <!-- уши: внешние (тёмно-оранжевые) -->
-  <path d="M13 31 L5 4 L31 19 Z" fill="#CF5C17"/>
-  <path d="M51 31 L59 4 L33 19 Z" fill="#CF5C17"/>
-  <!-- уши: внутренние (кремовые) -->
-  <path d="M15 27 L10 11 L27 20 Z" fill="#FCE3C6"/>
-  <path d="M49 27 L54 11 L37 20 Z" fill="#FCE3C6"/>
-  <!-- голова -->
-  <path d="M12 24 C12 16 20 12.5 32 12.5 C44 12.5 52 16 52 24 C52 39 44 51 32 55.5 C20 51 12 39 12 24 Z" fill="#F27D2A"/>
-  <!-- лобная проточина (кремовая) -->
-  <path d="M32 13 L26.5 31 L32 37 L37.5 31 Z" fill="#FCE3C6"/>
-  <!-- белая мордочка/щёки -->
-  <path d="M32 30 C24.5 30 18.5 33 15.5 41.5 C19.5 50 26 53.5 32 55.5 C38 53.5 44.5 50 48.5 41.5 C45.5 33 39.5 30 32 30 Z" fill="#FFF7EE"/>
-  <!-- глаза -->
-  <ellipse cx="24" cy="28.5" rx="3.1" ry="4" fill="#2C2117"/>
-  <ellipse cx="40" cy="28.5" rx="3.1" ry="4" fill="#2C2117"/>
-  <circle cx="25.2" cy="27" r="1.05" fill="#fff"/>
-  <circle cx="41.2" cy="27" r="1.05" fill="#fff"/>
+// Уши/глаза в группах с классами — их анимируем (моргание, дёрганье ушами).
+const FOX_SVG = `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="display:block;overflow:visible">
+  <!-- уши: высокие, острые (внешнее тёмно-рыжее + внутреннее кремовое) -->
+  <g class="fox-ear fox-ear-l">
+    <path d="M16 26 L7 1 L29 19 Z" fill="#D75E17"/>
+    <path d="M17.5 23 L11.5 7 L26 19 Z" fill="#FCE3C6"/>
+  </g>
+  <g class="fox-ear fox-ear-r">
+    <path d="M48 26 L57 1 L35 19 Z" fill="#D75E17"/>
+    <path d="M46.5 23 L52.5 7 L38 19 Z" fill="#FCE3C6"/>
+  </g>
+  <!-- голова: зауженная к острой морде -->
+  <path d="M13 23 C13 16 21 14 32 14 C43 14 51 16 51 23 C51 33 47 40 41 46 L32 57 L23 46 C17 40 13 33 13 23 Z" fill="#F27D2A"/>
+  <!-- боковые скулы темнее (объём) -->
+  <path d="M13 23 C14 33 17 40 23 46 L26.5 41 C21 36 18 30 18 24 Z" fill="#E86C1E" opacity=".5"/>
+  <path d="M51 23 C50 33 47 40 41 46 L37.5 41 C43 36 46 30 46 24 Z" fill="#E86C1E" opacity=".5"/>
+  <!-- лобная проточина -->
+  <path d="M32 15 L27 30 L32 35 L37 30 Z" fill="#FCE3C6"/>
+  <!-- пушистые щёки-кисточки (силуэт лисы) -->
+  <path d="M22 35 L8 42 L20 44 L13.5 50 L24.5 45 Z" fill="#FFF7EE"/>
+  <path d="M42 35 L56 42 L44 44 L50.5 50 L39.5 45 Z" fill="#FFF7EE"/>
+  <!-- белая морда, острая -->
+  <path d="M32 30 C27 30 23 32 21 37 L30 53 C31 54 33 54 34 53 L43 37 C41 32 37 30 32 30 Z" fill="#FFF7EE"/>
+  <!-- глаза (моргают) -->
+  <ellipse class="fox-eye" cx="24.5" cy="28.5" rx="2.9" ry="3.9" fill="#2C2117"/>
+  <ellipse class="fox-eye" cx="39.5" cy="28.5" rx="2.9" ry="3.9" fill="#2C2117"/>
+  <circle cx="25.6" cy="27" r=".95" fill="#fff"/>
+  <circle cx="40.6" cy="27" r=".95" fill="#fff"/>
   <!-- нос -->
-  <path d="M32 43.5 C29.4 43.5 27.8 41.8 27.8 40.2 C27.8 38.7 29.7 38.2 32 38.2 C34.3 38.2 36.2 38.7 36.2 40.2 C36.2 41.8 34.6 43.5 32 43.5 Z" fill="#2C2117"/>
+  <path d="M32 43 C29.6 43 28 41.4 28 39.9 C28 38.5 29.8 38.1 32 38.1 C34.2 38.1 36 38.5 36 39.9 C36 41.4 34.4 43 32 43 Z" fill="#2C2117"/>
   <!-- ротик -->
-  <path d="M32 43.5 L32 45.4" stroke="#D79A6A" stroke-width="1.1" stroke-linecap="round"/>
-  <path d="M32 45.4 C30 47.2 28 47.2 26.8 46" stroke="#D79A6A" stroke-width="1.1" stroke-linecap="round" fill="none"/>
-  <path d="M32 45.4 C34 47.2 36 47.2 37.2 46" stroke="#D79A6A" stroke-width="1.1" stroke-linecap="round" fill="none"/>
+  <path d="M32 43 L32 45" stroke="#D79A6A" stroke-width="1" stroke-linecap="round"/>
+  <path d="M32 45 C30.2 46.6 28.4 46.6 27.4 45.6" stroke="#D79A6A" stroke-width="1" stroke-linecap="round" fill="none"/>
+  <path d="M32 45 C33.8 46.6 35.6 46.6 36.6 45.6" stroke="#D79A6A" stroke-width="1" stroke-linecap="round" fill="none"/>
+  <!-- усы -->
+  <g stroke="#CBA986" stroke-width=".8" stroke-linecap="round">
+    <path d="M24 41 L14 40"/><path d="M24 42.5 L15 44.5"/>
+    <path d="M40 41 L50 40"/><path d="M40 42.5 L49 44.5"/>
+  </g>
 </svg>`;
 
 let cssInjected = false;

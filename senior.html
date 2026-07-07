@@ -89,6 +89,7 @@
 import { requireAuth, logout } from './auth-guard.js';
 import { getApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
 import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-functions.js';
+import { initAssistant } from './assistant.js';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const initials = (name) => (String(name||'').trim().split(/\s+/).map(p=>p[0]||'').slice(0,2).join('') || '?').toUpperCase();
@@ -130,6 +131,7 @@ let TARGET = null;
   renderHero(d);
   document.getElementById('banner').innerHTML = `<div class="banner">🚧 <b>Премиум v2 · этап 1.</b> Кабинет руководителя на реальных данных. Полный функционал — на подходе.</div>`;
   render(d);
+  initAssistant(d);
 })();
 
 function renderHero(d) {

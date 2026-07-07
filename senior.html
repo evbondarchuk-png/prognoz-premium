@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Прогноз · Премиум · Кабинет руководителя</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script type="importmap">
+  { "imports": { "https://www.gstatic.com/firebasejs/10.7.0/": "/libs/firebase/10.7.0/" } }
+  </script>
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    .wrap{max-width:1280px;margin:0 auto;padding:0 16px 60px}
+    .top{background:linear-gradient(160deg,var(--petrol),var(--petrol-deep));color:#fff;padding:24px 20px 26px}
+    .top-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:18px}
+    .avatar{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0}
+    .who{flex:1;min-width:0}
+    .who .role{display:inline-block;background:rgba(255,255,255,.16);border-radius:6px;padding:3px 10px;font-weight:700;font-size:11px;letter-spacing:.03em;text-transform:uppercase}
+    .who h1{font-size:22px;font-weight:800;line-height:1.2;margin:6px 0 3px}
+    .who .meta{font-size:12px;color:rgba(255,255,255,.72)}
+    .top-actions{display:flex;gap:8px;flex-shrink:0}
+    .top-btn{background:rgba(255,255,255,.12);border:none;color:#fff;font-family:inherit;font-size:14px;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700}
+    .top-btn:hover{background:rgba(255,255,255,.22)}
+
+    .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+    .tile{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow);position:relative}
+    .tile .lbl{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin-bottom:8px}
+    .tile .big{font-size:30px;font-weight:800;letter-spacing:-.5px;line-height:1.05;color:var(--ink)}
+    .tile .big.gold{color:var(--gold)}
+    .tile .big.bad{color:var(--bad)}
+    .tile .big.ok{color:var(--ok)}
+    .tile .sub{font-size:12px;color:var(--muted);margin-top:6px}
+    .tile .bar{height:6px;background:var(--card-2);border-radius:3px;overflow:hidden;margin-top:10px}
+    .tile .bar>i{display:block;height:100%;border-radius:3px}
+    .tile .bar>i.ok{background:var(--ok)}
+    .tile .bar>i.warn{background:var(--warn)}
+    .tile .bar>i.bad{background:var(--bad)}
+
+    .grid-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+    @media(max-width:900px){.grid-2col{grid-template-columns:1fr}}
+
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px}
+    .card h2{font-size:15px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+
+    .team-table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;margin-top:8px}
+    .team-table th{text-align:left;padding:10px 12px;font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--line);white-space:nowrap}
+    .team-table th.center{text-align:center}
+    .team-table th.right{text-align:right}
+    .team-table td{padding:11px 12px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+    .team-table td.center{text-align:center}
+    .team-table td.right{text-align:right}
+    .team-table tr:last-child td{border-bottom:none}
+    .team-table tr.t-row{cursor:pointer;transition:background .12s}
+    .team-table tr.t-row:hover td{background:var(--card-2)}
+    .ir-cell{display:inline-flex;align-items:center;justify-content:center;min-width:44px;padding:2px 10px;border-radius:999px;font-weight:800;font-size:12px}
+    .ir-cell.ok{background:var(--ok-soft);color:var(--ok)}
+    .ir-cell.warn{background:var(--warn-soft);color:var(--warn)}
+    .ir-cell.bad{background:var(--bad-soft);color:var(--bad)}
+    .ir-cell.nd{background:var(--card-2);color:var(--muted)}
+    .status-pill{display:inline-flex;align-items:center;justify-content:center;padding:2px 10px;border-radius:999px;font-weight:800;font-size:11px}
+    .status-pill.ok{background:var(--ok-soft);color:var(--ok)}
+    .status-pill.warn{background:var(--warn-soft);color:var(--warn)}
+    .status-pill.bad{background:var(--bad-soft);color:var(--bad)}
+
+    .m-name{font-weight:600;color:var(--ink);cursor:pointer}
+    .m-name:hover{color:var(--petrol)}
+    .m-meta{font-size:11px;color:var(--muted)}
+
+    .banner{background:var(--warn-soft);border:1px solid #F0D5AA;color:var(--warn);border-radius:12px;padding:12px 14px;margin-top:14px;font-size:12.5px}
+    .banner b{color:var(--ink)}
+    .loader{padding:60px;text-align:center;color:var(--muted)}
+
+    .stat-pill-set{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+    .stat-pill{background:var(--card-2);padding:8px 12px;border-radius:10px;border:1px solid var(--line)}
+    .stat-pill .k{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;font-weight:800}
+    .stat-pill .v{font-size:15px;font-weight:800;color:var(--ink);margin-top:2px}
+  </style>
+</head>
+<body>
+<div id="hero"></div>
+<div class="wrap">
+  <div id="banner"></div>
+  <div id="content"><div class="loader">Загрузка кабинета руководителя…</div></div>
+</div>
+
+<script type="module">
+import { requireAuth, logout } from './auth-guard.js';
+import { getApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-functions.js';
+
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const initials = (name) => (String(name||'').trim().split(/\s+/).map(p=>p[0]||'').slice(0,2).join('') || '?').toUpperCase();
+const fmtK = (n) => { n = Number(n)||0; if(n>=1e6) return (n/1e6).toFixed(1).replace('.',',')+' млн'; if(n>=1e4) return Math.round(n/1e3)+'к'; if(n>=1e3) return (n/1e3).toFixed(1).replace('.',',')+'к'; return String(Math.round(n)); };
+
+const params = new URLSearchParams(location.search);
+const mopParam = params.get('mop');
+const ropParam = params.get('rop');
+// view выбирается по параметру или по роли из auth-guard
+let VIEW = 'group';  // group | department | company
+let TARGET = null;
+
+(async () => {
+  const me = await requireAuth();
+  // По параметру — приоритет
+  if (mopParam) { VIEW = 'group'; TARGET = mopParam; }
+  else if (ropParam) { VIEW = 'department'; TARGET = ropParam; }
+  else {
+    // По роли пользователя
+    if (me.role === 'mop') { VIEW = 'group'; TARGET = me.code; }
+    else if (me.role === 'rop') { VIEW = 'department'; TARGET = me.code; }
+    else if (me.role === 'aup' || me.role === 'admin') { VIEW = 'company'; TARGET = null; }
+    else { location.href = 'index.html'; return; }
+  }
+
+  const fns = getFunctions(getApp(), 'europe-west1');
+  let d;
+  try {
+    const payload = { view: VIEW };
+    if (TARGET) payload.user_code = TARGET;
+    const res = await httpsCallable(fns, 'getDashboard')(payload);
+    d = res.data;
+  } catch (e) {
+    document.getElementById('content').innerHTML = `<div class="banner">Не удалось загрузить: ${esc(e.message || String(e))}</div>`;
+    console.error(e);
+    return;
+  }
+
+  renderHero(d);
+  document.getElementById('banner').innerHTML = `<div class="banner">🚧 <b>Премиум v2 · этап 1.</b> Кабинет руководителя на реальных данных. Полный функционал — на подходе.</div>`;
+  render(d);
+})();
+
+function renderHero(d) {
+  const u = d.user || {};
+  const roleLabel = u.role_label || (VIEW === 'group' ? 'Старший партнёр' : VIEW === 'department' ? 'Управляющий партнёр' : 'АУП');
+  const scope = VIEW === 'group' ? 'Группа' : VIEW === 'department' ? 'Отдел' : 'Компания';
+  const meta = [];
+  const membersCount = (d.aggregates && d.aggregates.scope && (d.aggregates.scope.active_count || d.aggregates.scope.members_count)) || 0;
+  if (membersCount) meta.push(`${scope} · ${membersCount} партнёров`);
+  if (u.stazh_label) meta.push('стаж ' + u.stazh_label);
+
+  const showBack = mopParam || ropParam;
+  const name = u.name || 'Компания';
+
+  document.getElementById('hero').innerHTML = `
+    <div class="top">
+      <div class="top-inner">
+        <div class="avatar">${esc(initials(name))}</div>
+        <div class="who">
+          <span class="role">${esc(roleLabel)}</span>
+          <h1>${esc(name)}</h1>
+          <div class="meta">${esc(meta.join(' · '))}</div>
+        </div>
+        <div class="top-actions">
+          ${u && u.code ? `<a class="top-btn" href="index.html?agent=${esc(u.code)}" style="text-decoration:none">👤 Мой кабинет</a>` : ''}
+          ${showBack ? '<button class="top-btn" onclick="history.back()">←</button>' : ''}
+          <button class="top-btn" onclick="__logout()">⎋</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function render(d) {
+  const html = [
+    tilesBlock(d),
+    fundamentalBlock(d),
+    teamBlock(d),
+  ].filter(Boolean).join('');
+  document.getElementById('content').innerHTML = html;
+}
+
+function tilesBlock(d) {
+  const a = d.aggregates || {};
+  const scope = a.scope || {};
+  const fc = a.forecast || {};
+  const cm = fc.current_month || {};
+  const perf = (scope.performers_v2_count != null) ? scope.performers_v2_count : (scope.performers_count || 0);
+  const total = scope.active_count || scope.members_count || 1;
+  const underperf = scope.underperformers_v2_count != null ? scope.underperformers_v2_count : 0;
+  const irWeek = (a.ir_v2_week_total != null) ? a.ir_v2_week_total : (a.ir_total || 0);
+  const factRev = cm.fact_revenue || 0;
+  const forecastRev = cm.forecast_revenue || 0;
+  const revTotal = cm.revenue_total || (factRev + forecastRev);
+  const planRev = a.plan_revenue_month || 0;
+  const planPct = planRev > 0 ? Math.min(200, Math.round(revTotal/planRev*100)) : 0;
+  const planCls = planPct >= 90 ? 'ok' : planPct >= 60 ? 'warn' : 'bad';
+  const irCls = irWeek >= 70 ? 'ok' : irWeek >= 50 ? 'warn' : 'bad';
+  const perfCls = perf/total >= 0.5 ? 'ok' : perf/total >= 0.25 ? 'warn' : 'bad';
+
+  return `<div class="tiles">
+    <div class="tile">
+      <div class="lbl">ИР ${VIEW==='group'?'группы':VIEW==='department'?'отдела':'компании'} · неделя</div>
+      <div class="big ${irCls}">${irWeek}%</div>
+      <div class="bar"><i class="${irCls}" style="width:${Math.min(100,irWeek)}%"></i></div>
+    </div>
+    <div class="tile">
+      <div class="lbl">Выполняют ИР ≥ 70%</div>
+      <div class="big ${perfCls}">${perf} <span style="font-size:16px;color:var(--muted)">из ${total}</span></div>
+      <div class="bar"><i class="${perfCls}" style="width:${Math.round(perf/total*100)}%"></i></div>
+    </div>
+    <div class="tile">
+      <div class="lbl">В зоне риска</div>
+      <div class="big ${underperf > 5 ? 'bad' : underperf > 0 ? 'warn' : 'ok'}">${underperf}</div>
+      <div class="sub">${underperf > 0 ? 'нужна поддержка' : 'риска нет'}</div>
+    </div>
+    <div class="tile">
+      <div class="lbl">Вал ${VIEW==='group'?'группы':VIEW==='department'?'отдела':'компании'} · тек.мес</div>
+      <div class="big gold">${fmtK(revTotal)}</div>
+      <div class="sub">факт ${fmtK(factRev)} ₽ · план ${fmtK(planRev)} · ${planPct}%</div>
+      <div class="bar"><i class="${planCls}" style="width:${Math.min(100,planPct)}%"></i></div>
+    </div>
+  </div>`;
+}
+
+function fundamentalBlock(d) {
+  const a = d.aggregates || {};
+  const buyer = a.buyer, seller = a.seller;
+  if (!buyer && !seller) return '';
+  return `<div class="grid-2col" style="margin-top:20px">
+    <div class="card">
+      <h2>🛒 Покупатель</h2>
+      ${sideBlock(buyer)}
+    </div>
+    <div class="card">
+      <h2>🏠 Продавец</h2>
+      ${sideBlock(seller)}
+    </div>
+  </div>`;
+}
+
+function sideBlock(fs) {
+  if (!fs) return '<div class="muted">Нет данных</div>';
+  const irCls = fs.ir_status === 'green' ? 'ok' : fs.ir_status === 'yellow' ? 'warn' : 'bad';
+  const stages = (fs.stages || []).map(st => {
+    const fact = st.fact || 0;
+    const plan = st.plan || 0;
+    const forecast = st.forecast || 0;
+    const factPct = plan > 0 ? Math.min(100, Math.round(fact/plan*100)) : 0;
+    const forecastDelta = plan > 0 && forecast > fact ? Math.min(100-factPct, Math.round((forecast-fact)/plan*100)) : 0;
+    return `<div style="padding:10px 0;border-top:1px solid var(--line-2)">
+      <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--ink-2);margin-bottom:4px">
+        <span>${esc(st.label || '')}${st.hint_label ? ` <span class="muted">${esc(st.hint_label)}</span>` : ''}</span>
+        <span style="font-weight:800;color:var(--ok)">${esc(st.fact_label || String(fact))} <span class="muted" style="font-weight:500">/ ${esc(st.plan_label || String(plan))}</span>${forecast > fact ? ` <span style="color:var(--warn);font-size:10px">+${fmtK(forecast-fact)}</span>` : ''}</span>
+      </div>
+      <div style="height:6px;background:var(--card-2);border-radius:3px;overflow:hidden;position:relative">
+        ${factPct > 0 ? `<i style="display:block;height:100%;background:var(--ok);position:absolute;width:${factPct}%"></i>` : ''}
+        ${forecastDelta > 0 ? `<i style="display:block;height:100%;background:var(--warn);position:absolute;left:${factPct}%;width:${forecastDelta}%"></i>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+  return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+    <span class="ir-cell ${irCls}">ИР ${fs.ir || 0}%</span>
+    <span class="muted" style="font-size:12px">${esc(fs.ir_status_label || '')}</span>
+  </div>${stages}`;
+}
+
+function teamBlock(d) {
+  const tc = (d.team_cards && d.team_cards.members) || [];
+  if (!tc.length) return '';
+  const drillTo = VIEW === 'group' ? 'index.html' : VIEW === 'department' ? 'senior.html' : 'senior.html';
+  const drillParam = VIEW === 'department' ? 'mop' : VIEW === 'company' ? 'rop' : 'agent';
+
+  const rows = tc.map(m => {
+    const ir = m.ir_v2_week_total ?? m.ir_month ?? m.ir_total ?? 0;
+    const irCls = ir >= 70 ? 'ok' : ir >= 50 ? 'warn' : ir > 0 ? 'bad' : 'nd';
+    const streak = m.weeks_in_risk_streak || 0;
+    const streakLabel = streak >= 4 ? 'Н4' : streak >= 3 ? 'Н3' : streak >= 2 ? 'Н2' : streak >= 1 ? 'Н1' : '';
+    const streakCls = streak >= 3 ? 'bad' : streak >= 1 ? 'warn' : 'ok';
+    const planM = m.plan_month || 0;
+    const factM = m.fact_month || 0;
+    const forecastM = m.forecast_month || 0;
+    const planPct = planM > 0 ? Math.round(forecastM/planM*100) : 0;
+    return `<tr class="t-row" onclick="location.href='${drillTo}?${drillParam}=${esc(m.code)}'">
+      <td>
+        <div class="m-name">${esc(m.short_name || m.name || '')}${m.is_newbie ? ' 🌱' : ''}${m.is_group_zero ? ' 🛌' : ''}</div>
+        <div class="m-meta">${esc(m.meta || '')}</div>
+      </td>
+      <td class="center"><span class="ir-cell ${irCls}">${ir || '—'}${ir?'%':''}</span></td>
+      <td class="center">${streakLabel ? `<span class="status-pill ${streakCls}">${streakLabel}</span>` : '<span class="muted">—</span>'}</td>
+      <td class="right"><b>${fmtK(factM)}</b> <span class="muted">₽</span></td>
+      <td class="right">${forecastM > 0 ? `<b>${fmtK(forecastM)}</b> <span class="muted">₽</span>${planPct > 0 ? `<div class="muted" style="font-size:10px">${planPct}% плана</div>` : ''}` : '<span class="muted">—</span>'}</td>
+    </tr>`;
+  }).join('');
+
+  const title = VIEW === 'group' ? 'Партнёры группы' : VIEW === 'department' ? 'Старшие партнёры отдела' : 'Управляющие партнёры компании';
+
+  return `<div class="card" style="margin-top:20px;padding:0;overflow:hidden">
+    <div style="padding:16px 20px 8px;display:flex;align-items:center;justify-content:space-between">
+      <h2 style="margin:0">👥 ${esc(title)} · ${tc.length}</h2>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="team-table">
+        <thead><tr>
+          <th>Партнёр</th>
+          <th class="center">ИР нед</th>
+          <th class="center">Стрик</th>
+          <th class="right">Факт вала</th>
+          <th class="right">Прогноз</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+window.__logout = async () => { await logout(); };
+</script>
+</body>
+</html>

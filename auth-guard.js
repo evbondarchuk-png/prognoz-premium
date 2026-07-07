@@ -68,10 +68,23 @@ export function requireAuth(opts = {}) {
         location.href = 'index.html';
         return;
       }
-      // Премиум v2 этап 1: пока делаем только партнёрский кабинет.
-      // МОП/РОП/АУП увидят приветствие-заглушку («ваш кабинет пока в разработке»)
-      // и смогут открыть кабинет партнёра явно через ?agent=<код>.
-      // Роутинг по ролям добавим в этапе 2.
+      // Автороутинг по роли (v2): МОП/РОП/АУП открываются на senior.html.
+      // Партнёры → index.html. Свой партнёрский кабинет руководители могут
+      // открыть явно через index.html?agent=<свой_код>.
+      const path = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+      const hasAgentParam = new URLSearchParams(location.search).has('agent');
+      const hasScopeParam = new URLSearchParams(location.search).has('mop') || new URLSearchParams(location.search).has('rop');
+      const isSeniorRole = ['mop','rop','aup','admin'].includes(userInfo.role);
+      if (isSeniorRole && path === 'index.html' && !hasAgentParam && !hasScopeParam) {
+        settled = true; unsub();
+        location.href = 'senior.html';
+        return;
+      }
+      if (!isSeniorRole && path === 'senior.html') {
+        settled = true; unsub();
+        location.href = 'index.html';
+        return;
+      }
       // Отписываемся: transient null-события (обновление токена, синхронизация
       // между вкладками через IndexedDB при открытии session-report) больше
       // не будут дёргать редирект на login. Реальный signOut ловится в момент

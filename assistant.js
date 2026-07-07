@@ -84,6 +84,9 @@ const CSS = `
 .p-send:disabled{opacity:.4;cursor:not-allowed}
 .p-typing{font-size:12px;color:var(--muted);padding:4px 8px}
 
+/* Рисованный маскот (картинка) — круглый аватар */
+.fox-img{width:100%;height:100%;object-fit:cover;object-position:50% 28%;border-radius:50%;display:block}
+
 /* Оживление лисы: моргание + дёрганье ушами (работает и в кнопке, и в шапке) */
 .fox-ear{transform-box:fill-box;transform-origin:50% 100%;animation:foxEar 6s ease-in-out infinite}
 .fox-ear-r{animation-delay:.45s}
@@ -135,6 +138,31 @@ const FOX_SVG = `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" wid
   </g>
 </svg>`;
 
+// Фолбэк: пока картинок mascot/*.webp нет — показываем векторную лису.
+if (typeof window !== 'undefined') window.__foxFallback = FOX_SVG;
+
+// Эмоция лисы по состоянию работы (данные getDashboard: партнёр и агрегат руководителя).
+// proud (гордая) · happy (норма) · cheer (подбодрить) · stern (риск Н1-Н2) · alarm (Н3-Н4).
+function pickFoxEmotion(d) {
+  if (!d) return 'happy';
+  const n = (x) => Number(x) || 0;
+  const week = d.ir_v2 && d.ir_v2.week;
+  const pct = week && week.ir_total != null ? n(week.ir_total) : n(d.ir_v2_week_total);
+  const nr = d.n_risk || {};
+  const streak = n(nr.streak);
+  const good = n(nr.good_streak);
+  if (streak >= 3) return 'alarm';
+  if (streak >= 1) return 'stern';
+  if (good >= 2 || pct >= 90) return 'proud';
+  if (pct >= 70) return 'happy';
+  return 'cheer';
+}
+
+// HTML маскота: рисованная картинка по эмоции, при 404 → векторный фолбэк.
+function foxHTML(emotion) {
+  return `<img class="fox-img" src="mascot/fox-${emotion}.webp" alt="Прогноша" title="Прогноша" onerror="this.outerHTML=window.__foxFallback||''">`;
+}
+
 let cssInjected = false;
 function injectCss() {
   if (cssInjected) return;
@@ -148,11 +176,13 @@ export function initAssistant(data) {
   injectCss();
   ctxData = data;
   if (document.getElementById('prognosha-fab')) return;
+  const emo = pickFoxEmotion(data);
 
   const fab = document.createElement('button');
   fab.id = 'prognosha-fab';
   fab.className = 'prognosha-fab';
-  fab.innerHTML = `<span class="p-fox">${FOX_SVG}</span><span class="dot"></span>`;
+  fab.dataset.emo = emo;
+  fab.innerHTML = `<span class="p-fox">${foxHTML(emo)}</span><span class="dot"></span>`;
   fab.title = 'Прогноша · ваш ассистент';
   fab.onclick = () => toggleSheet();
   document.body.appendChild(fab);
@@ -162,7 +192,7 @@ export function initAssistant(data) {
   sheet.className = 'prognosha-sheet';
   sheet.innerHTML = `
     <div class="p-head">
-      <div class="p-face">${FOX_SVG}</div>
+      <div class="p-face">${foxHTML(emo)}</div>
       <div style="flex:1">
         <div class="p-title">Прогноша</div>
         <div class="p-sub">твой ассистент по продажам</div>

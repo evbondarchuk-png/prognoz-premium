@@ -87,54 +87,73 @@ const CSS = `
 /* Рисованный маскот (картинка) — круглый аватар */
 .fox-img{width:100%;height:100%;object-fit:cover;object-position:50% 28%;border-radius:50%;display:block}
 
-/* Оживление лисы: моргание + дёрганье ушами (работает и в кнопке, и в шапке) */
+/* Оживление лисы: дыхание, моргание, уши, игра бровью */
+.fox-breathe{transform-box:fill-box;transform-origin:50% 88%;animation:foxBreathe 3.6s ease-in-out infinite}
+@keyframes foxBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
 .fox-ear{transform-box:fill-box;transform-origin:50% 100%;animation:foxEar 6s ease-in-out infinite}
 .fox-ear-r{animation-delay:.45s}
-@keyframes foxEar{0%,84%,100%{transform:rotate(0)}88%{transform:rotate(-9deg)}92%{transform:rotate(5deg)}96%{transform:rotate(-2deg)}}
+@keyframes foxEar{0%,84%,100%{transform:rotate(0)}88%{transform:rotate(-8deg)}92%{transform:rotate(5deg)}96%{transform:rotate(-2deg)}}
 .fox-eye{transform-box:fill-box;transform-origin:50% 50%;animation:foxBlink 4.6s ease-in-out infinite}
 @keyframes foxBlink{0%,92%,100%{transform:scaleY(1)}95%,97%{transform:scaleY(.1)}}
-@media(prefers-reduced-motion:reduce){.fox-ear,.fox-eye,.prognosha-fab{animation:none}}
+.fox-brow-l{transform-box:fill-box;transform-origin:50% 100%;animation:foxBrow 5.2s ease-in-out infinite}
+@keyframes foxBrow{0%,68%,100%{transform:translateY(0)}76%{transform:translateY(-2px)}88%{transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.fox-breathe,.fox-ear,.fox-eye,.fox-brow-l,.prognosha-fab{animation:none}}
 `;
 
-// Маскот «Прогноша» — оранжевая лиса. Самописный SVG (корпсеть режет внешние картинки).
-// Уши/глаза в группах с классами — их анимируем (моргание, дёрганье ушами).
-const FOX_SVG = `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="display:block;overflow:visible">
-  <!-- уши: высокие, острые (внешнее тёмно-рыжее + внутреннее кремовое) -->
-  <g class="fox-ear fox-ear-l">
-    <path d="M16 26 L7 1 L29 19 Z" fill="#D75E17"/>
-    <path d="M17.5 23 L11.5 7 L26 19 Z" fill="#FCE3C6"/>
-  </g>
-  <g class="fox-ear fox-ear-r">
-    <path d="M48 26 L57 1 L35 19 Z" fill="#D75E17"/>
-    <path d="M46.5 23 L52.5 7 L38 19 Z" fill="#FCE3C6"/>
-  </g>
-  <!-- голова: зауженная к острой морде -->
-  <path d="M13 23 C13 16 21 14 32 14 C43 14 51 16 51 23 C51 33 47 40 41 46 L32 57 L23 46 C17 40 13 33 13 23 Z" fill="#F27D2A"/>
-  <!-- боковые скулы темнее (объём) -->
-  <path d="M13 23 C14 33 17 40 23 46 L26.5 41 C21 36 18 30 18 24 Z" fill="#E86C1E" opacity=".5"/>
-  <path d="M51 23 C50 33 47 40 41 46 L37.5 41 C43 36 46 30 46 24 Z" fill="#E86C1E" opacity=".5"/>
-  <!-- лобная проточина -->
-  <path d="M32 15 L27 30 L32 35 L37 30 Z" fill="#FCE3C6"/>
-  <!-- пушистые щёки-кисточки (силуэт лисы) -->
-  <path d="M22 35 L8 42 L20 44 L13.5 50 L24.5 45 Z" fill="#FFF7EE"/>
-  <path d="M42 35 L56 42 L44 44 L50.5 50 L39.5 45 Z" fill="#FFF7EE"/>
-  <!-- белая морда, острая -->
-  <path d="M32 30 C27 30 23 32 21 37 L30 53 C31 54 33 54 34 53 L43 37 C41 32 37 30 32 30 Z" fill="#FFF7EE"/>
-  <!-- глаза (моргают) -->
-  <ellipse class="fox-eye" cx="24.5" cy="28.5" rx="2.9" ry="3.9" fill="#2C2117"/>
-  <ellipse class="fox-eye" cx="39.5" cy="28.5" rx="2.9" ry="3.9" fill="#2C2117"/>
-  <circle cx="25.6" cy="27" r=".95" fill="#fff"/>
-  <circle cx="40.6" cy="27" r=".95" fill="#fff"/>
-  <!-- нос -->
-  <path d="M32 43 C29.6 43 28 41.4 28 39.9 C28 38.5 29.8 38.1 32 38.1 C34.2 38.1 36 38.5 36 39.9 C36 41.4 34.4 43 32 43 Z" fill="#2C2117"/>
-  <!-- ротик -->
-  <path d="M32 43 L32 45" stroke="#D79A6A" stroke-width="1" stroke-linecap="round"/>
-  <path d="M32 45 C30.2 46.6 28.4 46.6 27.4 45.6" stroke="#D79A6A" stroke-width="1" stroke-linecap="round" fill="none"/>
-  <path d="M32 45 C33.8 46.6 35.6 46.6 36.6 45.6" stroke="#D79A6A" stroke-width="1" stroke-linecap="round" fill="none"/>
-  <!-- усы -->
-  <g stroke="#CBA986" stroke-width=".8" stroke-linecap="round">
-    <path d="M24 41 L14 40"/><path d="M24 42.5 L15 44.5"/>
-    <path d="M40 41 L50 40"/><path d="M40 42.5 L49 44.5"/>
+// Маскот «Прогноша» — детальная оранжевая лиса (по референсу Егора): чёрные кончики
+// ушей, зелёные прищуренные глаза, вздёрнутая бровь, ухмылка, намёк на тело/грудь.
+// Самописный SVG (корпсеть режет внешние картинки). Анимируется: дыхание, моргание,
+// уши, бровь. Классы fox-breathe/fox-ear-*/fox-eye/fox-brow-l → keyframes в CSS.
+const FOX_SVG = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="display:block;overflow:visible">
+  <g class="fox-breathe">
+    <!-- УШИ: рыжие с чёрными кончиками и кремовым нутром -->
+    <g class="fox-ear fox-ear-l">
+      <path d="M27 45 L14 7 L47 31 Z" fill="#D9611A"/>
+      <path d="M14 7 L17.9 18.4 L23.9 14.2 Z" fill="#241C15"/>
+      <path d="M26 42 L18 14 L42 30 Z" fill="#FBF3E7"/>
+    </g>
+    <g class="fox-ear fox-ear-r">
+      <path d="M73 45 L86 7 L53 31 Z" fill="#D9611A"/>
+      <path d="M86 7 L82.1 18.4 L76.1 14.2 Z" fill="#241C15"/>
+      <path d="M74 42 L82 14 L58 30 Z" fill="#FBF3E7"/>
+    </g>
+    <!-- ГОЛОВА -->
+    <path d="M24 42 C22 29 33 23 50 23 C67 23 78 29 76 42 C74 60 65 76 50 84 C35 76 26 60 24 42 Z" fill="#EE7B2E"/>
+    <path d="M24 42 C25 54 29 66 37 76 C33 66 30 54 30 44 Z" fill="#D9611A" opacity=".4"/>
+    <path d="M76 42 C75 54 71 66 63 76 C67 66 70 54 70 44 Z" fill="#D9611A" opacity=".4"/>
+    <!-- ПЛЕЧИ + белая грудь (намёк на тело) -->
+    <path d="M30 80 C26 88 24 96 26 100 L74 100 C76 96 74 88 70 80 C62 86 38 86 30 80 Z" fill="#EE7B2E"/>
+    <path d="M50 82 C44 89 42 96 43 100 L57 100 C58 96 56 89 50 82 Z" fill="#FBF3E7"/>
+    <!-- белые щёки/морда + пушистые кисточки -->
+    <path d="M50 45 C39 45 31 49 28 58 C31 72 41 81 50 84 C59 81 69 72 72 58 C69 49 61 45 50 45 Z" fill="#FBF3E7"/>
+    <path d="M30 55 L16 60 L28 63 Z" fill="#FBF3E7"/>
+    <path d="M29 62 L18 71 L30 69 Z" fill="#FBF3E7"/>
+    <path d="M70 55 L84 60 L72 63 Z" fill="#FBF3E7"/>
+    <path d="M71 62 L82 71 L70 69 Z" fill="#FBF3E7"/>
+    <!-- усы -->
+    <g stroke="#E4CFB2" stroke-width="1" stroke-linecap="round">
+      <path d="M31 59 L17 57"/><path d="M31 61.5 L18 62"/><path d="M31 64 L19 67"/>
+      <path d="M69 59 L83 57"/><path d="M69 61.5 L82 62"/><path d="M69 64 L81 67"/>
+    </g>
+    <!-- ГЛАЗА: зелёные, прищуренные -->
+    <ellipse class="fox-eye" cx="41" cy="47" rx="5" ry="3.8" fill="#93AE42"/>
+    <ellipse class="fox-eye" cx="59" cy="47" rx="5" ry="3.8" fill="#93AE42"/>
+    <ellipse cx="41" cy="47.6" rx="2" ry="2.9" fill="#241C15"/>
+    <ellipse cx="59" cy="47.6" rx="2" ry="2.9" fill="#241C15"/>
+    <circle cx="42.4" cy="45.6" r="1" fill="#fff"/>
+    <circle cx="60.4" cy="45.6" r="1" fill="#fff"/>
+    <path d="M36 45.6 C38.5 43.4 43.5 43.4 46 45.6 C43.5 44.8 38.5 44.8 36 45.6 Z" fill="#241C15" opacity=".85"/>
+    <path d="M54 45.6 C56.5 43.4 61.5 43.4 64 45.6 C61.5 44.8 56.5 44.8 54 45.6 Z" fill="#241C15" opacity=".85"/>
+    <!-- БРОВИ: левая вздёрнута (скепсис) -->
+    <path class="fox-brow-l" d="M34 40 Q40.5 34 47 38.5" stroke="#3A2A1C" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+    <path d="M53.5 40 L66 41.8" stroke="#3A2A1C" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+    <!-- НОС -->
+    <path d="M50 64 C46 64 43.5 61.5 43.5 59.5 C43.5 57.5 46.5 57 50 57 C53.5 57 56.5 57.5 56.5 59.5 C56.5 61.5 54 64 50 64 Z" fill="#241C15"/>
+    <ellipse cx="47.8" cy="58.6" rx="1.5" ry="1" fill="#fff" opacity=".45"/>
+    <!-- РОТ: ухмылка -->
+    <path d="M50 64 L50 67.5" stroke="#6B4A2E" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+    <path d="M50 67.5 C46 69 43 68.5 41 67" stroke="#6B4A2E" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+    <path d="M50 67.5 C55 70.5 60.5 69.5 63.5 66" stroke="#6B4A2E" stroke-width="1.6" stroke-linecap="round" fill="none"/>
   </g>
 </svg>`;
 
@@ -158,9 +177,12 @@ function pickFoxEmotion(d) {
   return 'cheer';
 }
 
-// HTML маскота: рисованная картинка по эмоции, при 404 → векторный фолбэк.
+// HTML маскота. Пока — единый детальный SVG (выражения по эмоциям добавим следующим шагом).
+// Если положить mascot/fox-<emotion>.webp — раскомментируй img-ветку, картинка перекроет SVG.
 function foxHTML(emotion) {
-  return `<img class="fox-img" src="mascot/fox-${emotion}.webp" alt="Прогноша" title="Прогноша" onerror="this.outerHTML=window.__foxFallback||''">`;
+  return FOX_SVG;
+  // Растровый вариант (когда будут картинки):
+  // return `<img class="fox-img" src="mascot/fox-${emotion}.webp" alt="Прогноша" onerror="this.outerHTML=window.__foxFallback||''">`;
 }
 
 let cssInjected = false;

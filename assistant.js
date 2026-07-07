@@ -21,6 +21,7 @@ const CSS = `
   transition:transform .18s;
 }
 .prognosha-fab:hover{transform:scale(1.08)}
+.prognosha-fab .p-fox{width:44px;height:44px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 1px 2px rgba(0,0,0,.18))}
 @keyframes pFabBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 .prognosha-fab .dot{
   position:absolute;top:6px;right:6px;
@@ -48,7 +49,8 @@ const CSS = `
   border-radius:16px 16px 0 0;
   display:flex;align-items:center;gap:10px;
 }
-.p-head .p-face{width:34px;height:34px;background:rgba(255,255,255,.16);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
+.p-head .p-face{width:36px;height:36px;background:#FFF7EE;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:2px;box-sizing:border-box}
+.p-head .p-face svg{width:100%;height:100%}
 .p-head .p-title{flex:1;font-weight:800;font-size:14px}
 .p-head .p-sub{font-size:11px;opacity:.7;font-weight:600}
 .p-close{background:rgba(255,255,255,.12);border:none;color:#fff;font-size:16px;width:32px;height:32px;border-radius:8px;cursor:pointer}
@@ -83,6 +85,33 @@ const CSS = `
 .p-typing{font-size:12px;color:var(--muted);padding:4px 8px}
 `;
 
+// Маскот «Прогноша» — оранжевая лиса. Самописный SVG (корпсеть режет внешние картинки).
+const FOX_SVG = `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="display:block">
+  <!-- уши: внешние (тёмно-оранжевые) -->
+  <path d="M13 31 L5 4 L31 19 Z" fill="#CF5C17"/>
+  <path d="M51 31 L59 4 L33 19 Z" fill="#CF5C17"/>
+  <!-- уши: внутренние (кремовые) -->
+  <path d="M15 27 L10 11 L27 20 Z" fill="#FCE3C6"/>
+  <path d="M49 27 L54 11 L37 20 Z" fill="#FCE3C6"/>
+  <!-- голова -->
+  <path d="M12 24 C12 16 20 12.5 32 12.5 C44 12.5 52 16 52 24 C52 39 44 51 32 55.5 C20 51 12 39 12 24 Z" fill="#F27D2A"/>
+  <!-- лобная проточина (кремовая) -->
+  <path d="M32 13 L26.5 31 L32 37 L37.5 31 Z" fill="#FCE3C6"/>
+  <!-- белая мордочка/щёки -->
+  <path d="M32 30 C24.5 30 18.5 33 15.5 41.5 C19.5 50 26 53.5 32 55.5 C38 53.5 44.5 50 48.5 41.5 C45.5 33 39.5 30 32 30 Z" fill="#FFF7EE"/>
+  <!-- глаза -->
+  <ellipse cx="24" cy="28.5" rx="3.1" ry="4" fill="#2C2117"/>
+  <ellipse cx="40" cy="28.5" rx="3.1" ry="4" fill="#2C2117"/>
+  <circle cx="25.2" cy="27" r="1.05" fill="#fff"/>
+  <circle cx="41.2" cy="27" r="1.05" fill="#fff"/>
+  <!-- нос -->
+  <path d="M32 43.5 C29.4 43.5 27.8 41.8 27.8 40.2 C27.8 38.7 29.7 38.2 32 38.2 C34.3 38.2 36.2 38.7 36.2 40.2 C36.2 41.8 34.6 43.5 32 43.5 Z" fill="#2C2117"/>
+  <!-- ротик -->
+  <path d="M32 43.5 L32 45.4" stroke="#D79A6A" stroke-width="1.1" stroke-linecap="round"/>
+  <path d="M32 45.4 C30 47.2 28 47.2 26.8 46" stroke="#D79A6A" stroke-width="1.1" stroke-linecap="round" fill="none"/>
+  <path d="M32 45.4 C34 47.2 36 47.2 37.2 46" stroke="#D79A6A" stroke-width="1.1" stroke-linecap="round" fill="none"/>
+</svg>`;
+
 let cssInjected = false;
 function injectCss() {
   if (cssInjected) return;
@@ -100,7 +129,7 @@ export function initAssistant(data) {
   const fab = document.createElement('button');
   fab.id = 'prognosha-fab';
   fab.className = 'prognosha-fab';
-  fab.innerHTML = '💬<span class="dot"></span>';
+  fab.innerHTML = `<span class="p-fox">${FOX_SVG}</span><span class="dot"></span>`;
   fab.title = 'Прогноша · ваш ассистент';
   fab.onclick = () => toggleSheet();
   document.body.appendChild(fab);
@@ -110,7 +139,7 @@ export function initAssistant(data) {
   sheet.className = 'prognosha-sheet';
   sheet.innerHTML = `
     <div class="p-head">
-      <div class="p-face">💬</div>
+      <div class="p-face">${FOX_SVG}</div>
       <div style="flex:1">
         <div class="p-title">Прогноша</div>
         <div class="p-sub">твой ассистент по продажам</div>

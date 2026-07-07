@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход — Премиум</title>
+  <!-- Локальные библиотеки (корп-сети блокируют gstatic). import map
+       перенаправляет gstatic-импорты firebase на /libs/, код не меняется. -->
+  <script type="importmap">
+  {
+    "imports": {
+      "https://www.gstatic.com/firebasejs/10.7.0/": "/libs/firebase/10.7.0/"
+    }
+  }
+  </script>
+  <style>
+    /* TZ-A22 §2 — единые дизайн-токены */
+    :root{
+      --bg:#f4f5f7; --surface:#fff; --surface-2:#f1f3f7;
+      --line:#e6e8ee;
+      --shadow:0 1px 3px rgba(20,30,55,.06),0 6px 24px rgba(20,30,55,.05);
+      --ink:#1a1f2e; --ink-soft:#3b4358; --muted:#7a8194; --muted-2:#a8aebd; --on-dark:#fff;
+      --brand:#0C5460; --brand-hover:#073B43; --brand-soft:#E4EEF0;
+      --ok:#16a34a; --warn:#d97706; --bad:#dc2626; --bad-bg:#fdeaea;
+      --r-xs:6px; --r-sm:8px; --r-md:10px; --r-lg:12px; --r-xl:14px; --r-pill:999px;
+      --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px; --sp-7:32px;
+      --fs-11:11px; --fs-12:12px; --fs-13:13px; --fs-14:14px; --fs-16:16px; --fs-20:20px; --fs-22:22px; --fs-28:28px;
+      --fw-r:400; --fw-m:500; --fw-sb:600; --fw-b:700; --fw-eb:800;
+      --transition:0.15s ease;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+      min-height: 100vh; margin: 0;
+      display: flex; align-items: center; justify-content: center;
+      padding: var(--sp-5); color: var(--ink);
+    }
+    .card {
+      background: var(--surface);
+      padding: var(--sp-7);
+      border-radius: var(--r-xl);
+      box-shadow: var(--shadow);
+      width: 100%; max-width: 420px;
+    }
+    .logo {
+      text-align: center;
+      font-size:var(--fs-28);
+      font-weight:var(--fw-eb);
+      color: var(--brand);
+      margin-bottom: var(--sp-2);
+    }
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-size:var(--fs-14);
+      margin-bottom: var(--sp-7);
+    }
+    .step { display: none; }
+    .step.active { display: block; }
+    label {
+      display: block;
+      font-size:var(--fs-13);
+      font-weight:var(--fw-sb);
+      color: #4a5568;
+      margin-bottom: 6px;
+    }
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      font-size:var(--fs-16);
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.15s;
+      font-family: inherit;
+    }
+    input:focus { border-color: #4299e1; }
+    .otp-input {
+      letter-spacing: 8px;
+      text-align: center;
+      font-size:var(--fs-22);
+      font-weight:var(--fw-sb);
+    }
+    button {
+      width: 100%;
+      padding: var(--sp-3) var(--sp-4);
+      margin-top: var(--sp-4);
+      font-size:var(--fs-16);
+      font-weight:var(--fw-sb);
+      color: var(--on-dark);
+      background: var(--brand);
+      border: none;
+      border-radius: var(--r-sm);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    button:hover:not(:disabled) { background: var(--brand-hover); }
+    button:disabled { background: var(--muted-2); cursor: not-allowed; }
+    .link {
+      display: block;
+      text-align: center;
+      margin-top: var(--sp-4);
+      color: var(--brand);
+      text-decoration: none;
+      font-size:var(--fs-14);
+      cursor: pointer;
+      background: none; border: none;
+    }
+    .link:hover { text-decoration: underline; }
+    .info {
+      background: var(--brand-soft);
+      color: var(--brand);
+      padding: var(--sp-3) var(--sp-3);
+      border-radius: var(--r-sm);
+      font-size:var(--fs-14);
+      margin-bottom: var(--sp-4);
+    }
+    .info b { font-family: 'Courier New', monospace; }
+    .error {
+      background: var(--bad-bg);
+      color: var(--bad);
+      padding: var(--sp-3) var(--sp-3);
+      border-radius: var(--r-sm);
+      font-size:var(--fs-14);
+      margin-bottom: var(--sp-4);
+    }
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid white;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  
+/* TZ-A22 §3.6/§3.8 — единые кнопки и бейджи (готовы для этапа 5) */
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:var(--sp-1);font-family:inherit;font-size:var(--fs-13);font-weight:var(--fw-sb);padding:var(--sp-2) var(--sp-4);border-radius:var(--r-pill);border:1px solid var(--brand);background:var(--brand);color:var(--on-dark);cursor:pointer;transition:var(--transition);line-height:1;white-space:nowrap}
+.btn-primary:hover:not(:disabled){background:var(--brand-hover);border-color:var(--brand-hover)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.btn-secondary{display:inline-flex;align-items:center;justify-content:center;gap:var(--sp-1);font-family:inherit;font-size:var(--fs-13);font-weight:var(--fw-sb);padding:var(--sp-2) var(--sp-4);border-radius:var(--r-pill);border:1px solid var(--line);background:transparent;color:var(--ink-soft);cursor:pointer;transition:var(--transition);line-height:1;white-space:nowrap}
+.btn-secondary:hover:not(:disabled){border-color:var(--brand);color:var(--brand)}
+.btn-danger{display:inline-flex;align-items:center;justify-content:center;gap:var(--sp-1);font-family:inherit;font-size:var(--fs-13);font-weight:var(--fw-sb);padding:var(--sp-2) var(--sp-4);border-radius:var(--r-pill);border:1px solid var(--bad);background:transparent;color:var(--bad);cursor:pointer;transition:var(--transition);line-height:1;white-space:nowrap}
+.btn-danger:hover:not(:disabled){background:var(--bad-bg)}
+.btn-icon{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;padding:0;border-radius:50%;border:1px solid transparent;cursor:pointer;font-size:var(--fs-14);background:transparent;transition:var(--transition);font-family:inherit}
+.btn-icon.ok{color:var(--ok);border-color:var(--ok)} .btn-icon.ok:hover{background:var(--ok-bg)}
+.btn-icon.muted{color:var(--muted)} .btn-icon.muted:hover{color:var(--bad)}
+
+.badge{display:inline-flex;align-items:center;gap:var(--sp-1);font-size:var(--fs-12);font-weight:var(--fw-sb);padding:var(--sp-1) var(--sp-2);border-radius:var(--r-sm);line-height:1.2}
+.badge-ok{background:var(--ok-bg);color:var(--ok)}
+.badge-warn{background:var(--warn-bg);color:var(--warn)}
+.badge-bad{background:var(--bad-bg);color:var(--bad)}
+.badge-nd{background:var(--nd-bg);color:var(--nd)}
+.badge-info{background:var(--brand-soft);color:var(--brand)}
+
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">Премиум</div>
+    <div class="subtitle">Вход в систему</div>
+
+    <div id="error" class="error" style="display:none"></div>
+
+    <!-- ШАГ 1: код сотрудника -->
+    <div id="step-code" class="step active">
+      <label for="code">Код сотрудника</label>
+      <input type="text" id="code" inputmode="numeric" autocomplete="off"
+             placeholder="Например, 113970" />
+      <button id="btn-request" onclick="requestOtp()">Получить код</button>
+    </div>
+
+    <!-- ШАГ 2: ввод OTP -->
+    <div id="step-otp" class="step">
+      <div class="info">
+        Код отправлен на <b id="email-mask">***</b>
+      </div>
+      <label for="otp">Код из письма (6 цифр)</label>
+      <input type="text" id="otp" inputmode="numeric" autocomplete="one-time-code"
+             maxlength="6" class="otp-input" placeholder="••••••" />
+      <button id="btn-verify" onclick="verifyOtp()">Войти</button>
+      <button class="link" onclick="resetToStep1()">← Указать другой код</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+    import { getAuth, signInWithCustomToken, setPersistence, browserLocalPersistence }
+      from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+    import { getFunctions, httpsCallable }
+      from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-functions.js';
+
+    const firebaseConfig = {
+      databaseURL: 'https://prognoz-archive-default-rtdb.europe-west1.firebasedatabase.app',
+      apiKey: 'AIzaSyCOSLUKCQMhV4HL5Rgle38e3NHeZis6wyU',
+      authDomain: 'prognoz-archive.firebaseapp.com',
+      projectId: 'prognoz-archive',
+      appId: '1:47892435250:web:2efc1123c3191ce556472b',
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const functions = getFunctions(app, 'europe-west1');
+
+    await setPersistence(auth, browserLocalPersistence);
+
+    const requestOtpFn = httpsCallable(functions, 'requestOtp');
+    const verifyOtpFn = httpsCallable(functions, 'verifyOtp');
+
+    const $ = (id) => document.getElementById(id);
+    const showError = (msg) => { $('error').textContent = msg; $('error').style.display = 'block'; };
+    const hideError = () => { $('error').style.display = 'none'; };
+    const setLoading = (btnId, loading, text) => {
+      const btn = $(btnId);
+      btn.disabled = loading;
+      btn.innerHTML = loading ? `<span class="spinner"></span>${text}` : text;
+    };
+
+    window.requestOtp = async () => {
+      hideError();
+      const code = $('code').value.trim();
+      if (!/^\d+$/.test(code)) {
+        showError('Введите числовой код сотрудника.');
+        return;
+      }
+      setLoading('btn-request', true, 'Отправляем...');
+      try {
+        const res = await requestOtpFn({ code });
+        $('email-mask').textContent = res.data.emailMask;
+        $('step-code').classList.remove('active');
+        $('step-otp').classList.add('active');
+        $('otp').focus();
+      } catch (e) {
+        showError(e.message || 'Ошибка отправки кода.');
+      } finally {
+        setLoading('btn-request', false, 'Получить код');
+      }
+    };
+
+    window.verifyOtp = async () => {
+      hideError();
+      const code = $('code').value.trim();
+      const otp = $('otp').value.trim();
+      if (!/^\d{6}$/.test(otp)) {
+        showError('Введите 6 цифр из письма.');
+        return;
+      }
+      setLoading('btn-verify', true, 'Проверяем...');
+      try {
+        const res = await verifyOtpFn({ code, otp });
+        await signInWithCustomToken(auth, res.data.token);
+        // Учитываем ?back=... — если есть, вернёмся туда
+        const params = new URLSearchParams(location.search);
+        const back = params.get('back');
+        const role = res.data.role;
+        // Маршрутизация по ролям: каждая роль идёт на свой кабинет.
+        // ?back= имеет приоритет — если пользователь пришёл с конкретной
+        // страницы, возвращаем туда же.
+        const dest = back ? decodeURIComponent(back)
+                   : role === 'realtor' ? 'index.html'
+                   : role === 'mop'     ? 'mop.html'
+                   : role === 'rop'     ? 'rop.html'
+                   : role === 'aup'     ? 'aup.html'
+                   : role === 'admin'   ? 'aup.html'
+                   : 'index.html';
+        location.href = dest;
+      } catch (e) {
+        showError(e.message || 'Ошибка проверки кода.');
+      } finally {
+        setLoading('btn-verify', false, 'Войти');
+      }
+    };
+
+    window.resetToStep1 = () => {
+      hideError();
+      $('otp').value = '';
+      $('step-otp').classList.remove('active');
+      $('step-code').classList.add('active');
+      $('code').focus();
+    };
+
+    // Enter для удобства
+    $('code').addEventListener('keydown', (e) => { if (e.key === 'Enter') window.requestOtp(); });
+    $('otp').addEventListener('keydown', (e) => { if (e.key === 'Enter') window.verifyOtp(); });
+  </script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <title>Прогноз · Премиум</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script type="importmap">
+  { "imports": { "https://www.gstatic.com/firebasejs/10.7.0/": "/libs/firebase/10.7.0/" } }
+  </script>
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    /* HERO — верхняя тёмная шапка */
+    .top{background:linear-gradient(160deg,var(--petrol),var(--petrol-deep));color:#fff;padding:18px 18px 20px;position:sticky;top:0;z-index:10}
+    .top-row{display:flex;align-items:center;gap:12px}
+    .who{flex:1;min-width:0}
+    .who .role{display:inline-block;background:rgba(255,255,255,.16);border-radius:6px;padding:2px 8px;font-weight:700;font-size:10px;margin-right:6px;letter-spacing:.03em;text-transform:uppercase}
+    .who h1{font-size:17px;font-weight:800;line-height:1.2;margin:6px 0 3px}
+    .who .meta{font-size:11px;color:rgba(255,255,255,.7)}
+    .top-actions{display:flex;gap:6px}
+    .top-btn{background:rgba(255,255,255,.12);border:none;color:#fff;font-family:inherit;font-size:13px;padding:8px;border-radius:10px;cursor:pointer;line-height:1;min-width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center}
+    .top-btn:active{background:rgba(255,255,255,.24)}
+    /* КАРТОЧКА */
+    .wrap{max-width:420px;margin:0 auto;padding-bottom:80px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);margin:12px;padding:16px}
+    .eyebrow{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+    .big{font-size:32px;font-weight:800;letter-spacing:-.5px}
+    .pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;padding:4px 11px;border-radius:999px}
+    .pill.ok{background:var(--ok-soft);color:var(--ok)}
+    .pill.warn{background:var(--warn-soft);color:var(--warn)}
+    .pill.bad{background:var(--bad-soft);color:var(--bad)}
+    .row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+    .muted{color:var(--muted);font-size:12px}
+    .stack{height:32px;background:var(--card-2);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;position:relative;margin-top:10px}
+    .stack .fact{background:var(--petrol);display:flex;align-items:center;padding:0 10px;color:#fff;font-weight:800;font-size:12px}
+    .banner{background:var(--warn-soft);border:1px solid var(--warn);color:var(--warn);border-radius:12px;padding:14px 16px;margin:12px;font-size:13px;line-height:1.45}
+    .banner b{color:var(--ink)}
+    .loader{padding:40px;text-align:center;color:var(--muted)}
+    .kv{display:grid;grid-template-columns:1fr auto;gap:8px 12px;font-size:13px;margin-top:8px}
+    .kv .k{color:var(--muted)}
+    .kv .v{font-weight:700;color:var(--ink)}
+    .stripe-c1,.stripe-c2,.stripe-c3,.stripe-c4{height:6px;border-radius:3px;background:var(--card-2);overflow:hidden;margin-top:4px}
+    .stripe-c1>i,.stripe-c2>i,.stripe-c3>i,.stripe-c4>i{display:block;height:100%;border-radius:3px;background:var(--petrol)}
+    .comp-row{display:grid;grid-template-columns:60px 1fr auto;gap:9px;align-items:center;margin-top:10px;font-size:12px}
+    .comp-row .cn{color:var(--ink-2);font-weight:600}
+    .comp-row .cv{font-weight:800;white-space:nowrap;color:var(--ink)}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div id="hero"></div>
+  <div id="content"><div class="loader">Загрузка кабинета…</div></div>
+</div>
+
+<script type="module">
+import { requireAuth, logout } from './auth-guard.js';
+import { getApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-functions.js';
+
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const initials = (name) => (String(name||'').trim().split(/\s+/).map(p=>p[0]||'').slice(0,2).join('') || '?').toUpperCase();
+const fmtK = (n) => { n = Number(n)||0; if(n>=1e6) return (n/1e6).toFixed(1).replace('.',',')+' млн'; if(n>=1e4) return Math.round(n/1e3)+'к'; if(n>=1e3) return (n/1e3).toFixed(1).replace('.',',')+'к'; return String(Math.round(n)); };
+const fmtFull = (n) => String(Math.round(Number(n)||0)).replace(/\B(?=(\d{3})+(?!\d))/g,' ');
+
+(async () => {
+  const me = await requireAuth();
+  const params = new URLSearchParams(location.search);
+  const targetCode = params.get('agent') || me.code;
+
+  const fns = getFunctions(getApp(), 'europe-west1');
+  let d;
+  try {
+    const res = await httpsCallable(fns, 'getDashboard')({ user_code: targetCode, view: 'partner' });
+    d = res.data;
+  } catch (e) {
+    document.getElementById('content').innerHTML =
+      `<div class="banner">Не удалось загрузить кабинет: <b>${esc(e.message || String(e))}</b></div>`;
+    console.error(e);
+    return;
+  }
+
+  renderHero(d, me);
+  renderContent(d);
+})();
+
+function renderHero(d, me) {
+  const u = d.user || {};
+  const roleLabel = u.role_label || 'Партнёр';
+  const meta = [];
+  if (u.mop_name) meta.push('Старший: ' + u.mop_name);
+  if (u.stazh_label) meta.push('стаж ' + u.stazh_label);
+  const showBack = new URLSearchParams(location.search).has('agent');
+  document.getElementById('hero').innerHTML = `
+    <div class="top">
+      <div class="top-row">
+        <div class="who">
+          <span class="role">${esc(roleLabel)}</span>
+          <h1>${esc(u.name || '')}</h1>
+          <div class="meta">${esc(meta.join(' · '))}</div>
+        </div>
+        <div class="top-actions">
+          ${showBack ? '<button class="top-btn" onclick="history.back()" title="Назад">←</button>' : ''}
+          <button class="top-btn" onclick="__logout()" title="Выход">⎋</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderContent(d) {
+  const u = d.user || {};
+  const irBlock = irCard(d);
+  const goalBlock = goalCard(d);
+  const svetoforBlock = svetoforCard(d);
+  const preview = `
+    <div class="banner">🚧 <b>Премиум v2 · этап 1.</b> Идёт разработка. Пока показываем базовый профиль на реальных данных для проверки чтения.</div>
+    ${irBlock}
+    ${goalBlock}
+    ${svetoforBlock}
+  `;
+  document.getElementById('content').innerHTML = preview;
+}
+
+function irCard(d) {
+  const ir = d.ir_v2 && d.ir_v2.week;
+  if (!ir) return '';
+  const tot = ir.ir_total ?? 0;
+  const cls = tot >= 70 ? 'ok' : (tot >= 50 ? 'warn' : 'bad');
+  const b = ir.breakdown || {};
+  const c = (key, label) => {
+    const v = (b[key] && (b[key].total ?? b[key])) ?? 0;
+    const pct = Math.min(100, Math.max(0, v));
+    return `<div class="comp-row">
+      <div class="cn">${esc(label)}</div>
+      <div class="stripe-c1"><i style="width:${pct}%"></i></div>
+      <div class="cv">${v}%</div>
+    </div>`;
+  };
+  return `<div class="card">
+    <div class="eyebrow">Индекс развития · неделя</div>
+    <div class="row">
+      <div class="big">${tot}%</div>
+      <span class="pill ${cls}">${cls === 'ok' ? 'норма' : cls === 'warn' ? 'внимание' : 'риск'}</span>
+    </div>
+    <div class="muted">4 равные части: поток · горячие · задатки · вал</div>
+    ${c('c1','поток')}${c('c2','горячие')}${c('c3','задатки')}${c('c4','вал')}
+  </div>`;
+}
+
+function goalCard(d) {
+  const g = d.goal;
+  const u = d.user || {};
+  if (!g) return '';
+  const inc = u.income_month || 0;
+  const tgt = g.target_revenue_month || 0;
+  const pct = tgt > 0 ? Math.min(100, Math.round(inc/tgt*100)) : 0;
+  return `<div class="card">
+    <div class="eyebrow">Цель по доходу</div>
+    <div class="row" style="justify-content:space-between">
+      <div>
+        <div class="big" style="color:var(--gold)">${fmtK(inc)} <span class="muted num" style="font-size:14px">/ ${fmtK(tgt)} ₽</span></div>
+      </div>
+      <span class="pill ${pct >= 90 ? 'ok' : pct >= 60 ? 'warn' : 'bad'}">${pct}%</span>
+    </div>
+    <div class="stack"><div class="fact" style="width:${pct}%">${pct >= 30 ? fmtK(inc) : ''}</div></div>
+    <div class="muted" style="margin-top:8px">Средний доход за 12 мес vs цель</div>
+  </div>`;
+}
+
+function svetoforCard(d) {
+  const u = d.user || {};
+  if (u.position_in_company == null && u.position_in_pool == null) return '';
+  const pos = u.position_in_pool ?? u.position_in_company;
+  const zone = u.svetofor_zone_label || '';
+  const category = u.svetofor_zone_category || '';
+  return `<div class="card">
+    <div class="eyebrow">Светофор</div>
+    <div class="row" style="justify-content:space-between;align-items:center">
+      <div class="big">#${pos}</div>
+      <div style="text-align:right">
+        <div style="font-size:13px;font-weight:700">${esc(zone)}</div>
+        <div class="muted">${esc(category)}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+window.__logout = async () => { await logout(); };
+</script>
+</body>
+</html>

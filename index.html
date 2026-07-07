@@ -59,12 +59,8 @@
     .stripe{height:6px;border-radius:3px;background:var(--card-2);overflow:hidden}
     .stripe>i{display:block;height:100%;border-radius:3px;background:var(--petrol);transition:width .3s ease}
 
-    /* Grid для главной */
-    .grid-2{display:grid;grid-template-columns:1fr;gap:0}
-    @media(min-width:768px){.grid-2{grid-template-columns:1fr 1fr;gap:0;margin:0}}
-
     /* Баннер */
-    .banner{background:var(--warn-soft);border:1px solid var(--warn-line,#F0D5AA);color:var(--warn);border-radius:12px;padding:12px 14px;margin:12px;font-size:12.5px;line-height:1.45}
+    .banner{background:var(--warn-soft);border:1px solid #F0D5AA;color:var(--warn);border-radius:12px;padding:12px 14px;margin:12px;font-size:12.5px;line-height:1.45}
     .banner b{color:var(--ink)}
 
     /* Loader / пусто */
@@ -72,7 +68,7 @@
     .empty-tab{padding:60px 20px;text-align:center;color:var(--muted);font-size:14px}
     .empty-tab .em{font-size:32px;margin-bottom:10px;display:block}
 
-    /* Экран (одна вкладка активна) */
+    /* Экран */
     .screen{display:none}
     .screen.on{display:block}
 
@@ -89,6 +85,71 @@
     /* Стрик badge */
     .streak-badge{display:inline-flex;align-items:center;gap:5px;background:var(--gold-soft);color:var(--gold);border:1px solid var(--gold-line);border-radius:999px;padding:4px 10px;font-size:11px;font-weight:800;margin-left:8px}
     .n-risk-badge{display:inline-flex;align-items:center;gap:5px;background:var(--bad-soft);color:var(--bad);border:1px solid var(--bad-line);border-radius:999px;padding:4px 10px;font-size:11px;font-weight:800;margin-left:8px}
+
+    /* Воронка (кабинет партнёра, вкладки прогноз/тренер) */
+    .funnel-side{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:10px;background:var(--card)}
+    .funnel-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .funnel-dot{width:9px;height:9px;border-radius:50%}
+    .funnel-dot.buyer{background:#4A90E2}
+    .funnel-dot.seller{background:var(--ok)}
+    .funnel-title{font-weight:800;font-size:13px}
+    .funnel-stage{display:grid;grid-template-columns:1fr auto;gap:6px;padding:6px 0;border-top:1px solid var(--line-2)}
+    .funnel-stage:first-of-type{border-top:none}
+    .funnel-stage .st-name{font-size:12px;font-weight:600;color:var(--ink-2)}
+    .funnel-stage .st-fp{font-size:11px;font-weight:800;text-align:right}
+    .funnel-stage .st-fp .fact{color:var(--ok)}
+    .funnel-stage .st-fp .plan{color:var(--muted);font-weight:500}
+    .funnel-stage .st-bar{grid-column:1/-1;height:6px;background:var(--card-2);border-radius:3px;overflow:hidden;position:relative;margin-top:4px}
+    .funnel-stage .st-bar>i{display:block;height:100%;border-radius:3px}
+    .st-bar .st-fill-fact{background:var(--ok);position:absolute;left:0;top:0}
+    .st-bar .st-fill-forecast{background:var(--warn);position:absolute;top:0}
+
+    /* Прогноз / цикл-график */
+    .cycle-bars{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:end;height:180px;margin-top:12px}
+    .cycle-col{display:flex;flex-direction:column;align-items:center;gap:5px;height:100%}
+    .cycle-col .cur-tag{font-size:9px;color:var(--petrol);text-transform:uppercase;letter-spacing:.03em;font-weight:800;min-height:12px}
+    .cycle-col .cur-tag.hidden{opacity:0}
+    .cycle-col .bar-slot{position:relative;flex:1;width:100%;background:#F1F5F9;border-radius:6px;overflow:hidden;min-height:100px}
+    .cycle-col .plan-bar{position:absolute;bottom:0;left:0;right:0;background:repeating-linear-gradient(45deg,#cbd5e1 0,#cbd5e1 4px,#e2e8f0 4px,#e2e8f0 8px);border-radius:6px;opacity:.7}
+    .cycle-col .fact-bar{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,#22C55E,#16A34A);border-radius:6px;display:flex;align-items:flex-start;justify-content:center;padding-top:5px}
+    .cycle-col .fcst-bar{position:absolute;left:0;right:0;background:linear-gradient(180deg,#3B82F6,#1E63D9);border-radius:6px;display:flex;align-items:flex-start;justify-content:center;padding-top:5px}
+    .cycle-col .bar-lbl{color:#fff;font-size:11px;font-weight:800;text-shadow:0 1px 2px rgba(0,0,0,.15)}
+    .cycle-col .val-label{font-size:11px;font-weight:800;color:var(--ink);text-align:center}
+    .cycle-col .mon-label{font-size:10.5px;color:var(--muted);font-weight:700;text-transform:uppercase}
+    .cycle-legend{display:flex;gap:14px;font-size:11px;color:var(--muted);padding:10px 0 4px;border-top:1px dashed var(--line);margin-top:8px;flex-wrap:wrap}
+    .cycle-legend i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+
+    /* Coach */
+    .weak-item{display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--line-2);font-size:12.5px}
+    .weak-item:first-of-type{border-top:none}
+    .weak-item .wl{color:var(--bad);font-weight:600}
+    .weak-item .wr{color:var(--muted)}
+
+    /* Задачи (list-row) */
+    .list-row{display:flex;align-items:center;gap:10px;padding:11px 12px;border-bottom:1px solid var(--line-2);cursor:pointer;transition:background .1s}
+    .list-row:last-child{border-bottom:none}
+    .list-row:hover{background:var(--card-2)}
+    .list-row.overdue{background:var(--bad-soft)}
+    .list-row.done{opacity:.55}
+    .list-row.done .lr-title{text-decoration:line-through}
+    .lr-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .lr-body{flex:1;min-width:0}
+    .lr-title{font-size:13px;font-weight:600;color:var(--ink);line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .lr-meta{font-size:11px;color:var(--muted);margin-top:2px;display:flex;gap:8px;flex-wrap:wrap}
+    .lr-when{font-weight:600}
+    .lr-when.overdue{color:var(--bad);font-weight:800}
+    .lr-when.today{color:var(--bad);font-weight:800}
+    .lr-when.week{color:var(--warn);font-weight:700}
+    .lr-actions{display:flex;gap:4px;flex-shrink:0}
+    .lr-actions button{width:30px;height:30px;border:none;background:var(--card-2);border-radius:8px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:.1s}
+    .lr-actions button:hover{background:var(--line)}
+    .lr-actions .lr-done{background:var(--ok-soft);color:var(--ok)}
+    .lr-actions .lr-done:hover{background:#B7E4C7}
+
+    .task-filters{display:flex;gap:6px;flex-wrap:wrap;padding:12px;background:var(--card-2);border-radius:10px;margin-bottom:12px}
+    .task-filters .lf-btn{font-size:11px;font-weight:700;padding:6px 11px;border:none;background:var(--card);color:var(--muted);border-radius:999px;cursor:pointer;font-family:inherit;transition:.1s}
+    .task-filters .lf-btn:hover{color:var(--ink)}
+    .task-filters .lf-btn.on{background:var(--petrol);color:#fff}
   </style>
 </head>
 <body>
@@ -113,13 +174,15 @@
 import { requireAuth, logout } from './auth-guard.js';
 import { getApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
 import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-functions.js';
+import { openTaskDetail } from './calendar.js';
+import { getDatabase } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const initials = (name) => (String(name||'').trim().split(/\s+/).map(p=>p[0]||'').slice(0,2).join('') || '?').toUpperCase();
 const fmtK = (n) => { n = Number(n)||0; if(n>=1e6) return (n/1e6).toFixed(1).replace('.',',')+' млн'; if(n>=1e4) return Math.round(n/1e3)+'к'; if(n>=1e3) return (n/1e3).toFixed(1).replace('.',',')+'к'; return String(Math.round(n)); };
-const fmtFull = (n) => String(Math.round(Number(n)||0)).replace(/\B(?=(\d{3})+(?!\d))/g,' ');
+const monShort = (ym) => { const m=['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек']; return m[parseInt((ym||'').slice(5,7),10)-1] || ym; };
 
-const CTX = { data: null, target: null };
+const CTX = { data: null, target: null, taskFilter: 'all' };
 window.__ctx = CTX;
 
 (async () => {
@@ -143,8 +206,12 @@ window.__ctx = CTX;
 
   renderHero(d);
   document.getElementById('tabs').style.display = 'flex';
-  document.getElementById('banner').innerHTML = `<div class="banner">🚧 <b>Премиум v2 · этап 1 фаза 1.</b> Дальше будем добавлять прогноз, тренера, задачи. Данные — из общего бэка.</div>`;
+  document.getElementById('banner').innerHTML = `<div class="banner">🚧 <b>Премиум v2 · этап 1.</b> Партнёрский кабинет на реальных данных общего бэка. Остальные роли и ассистент — на подходе.</div>`;
   renderMain(d);
+  // Обновим бейджик задач
+  const cntTasks = (d.tasks && d.tasks.counts) || {};
+  const total = (cntTasks.today||0) + (cntTasks.expired||0);
+  if (total > 0) document.getElementById('tabBadge').textContent = ' ' + total;
 
   // Табы
   document.querySelectorAll('.tab').forEach(t => {
@@ -154,7 +221,6 @@ window.__ctx = CTX;
       const target = t.dataset.tab;
       document.getElementById('screen-' + target).classList.add('on');
       renderTab(target, d);
-      // scroll to top
       window.scrollTo({top: 0, behavior: 'smooth'});
     };
   });
@@ -167,8 +233,6 @@ function renderHero(d) {
   if (u.mop_name && u.code !== u.mop_code) meta.push('Старший: ' + u.mop_name);
   if (u.stazh_label) meta.push('стаж ' + u.stazh_label);
   const showBack = new URLSearchParams(location.search).has('agent');
-
-  // Позитивный или негативный стрик
   const nr = d.n_risk || {};
   let streakChip = '';
   if ((nr.good_streak || 0) >= 1) {
@@ -178,7 +242,6 @@ function renderHero(d) {
     const s = Math.min(nr.streak, 4);
     streakChip = `<span class="n-risk-badge">Н${s}</span>`;
   }
-
   document.getElementById('hero').innerHTML = `
     <div class="top">
       <div class="top-inner">
@@ -204,12 +267,16 @@ function renderTab(name, d) {
   if (name === 'tasks') { renderTasksTab(d); return; }
 }
 
+// ============ ГЛАВНАЯ ============
+
 function renderMain(d) {
   const html = [
     irCard(d),
     moneyCard(d),
     goalCard(d),
+    funnelCard(d),
     svetoforCard(d),
+    tasksPreviewCard(d),
   ].filter(Boolean).join('');
   document.getElementById('screen-main').innerHTML = html || '<div class="empty-tab">Данных нет</div>';
 }
@@ -314,13 +381,367 @@ function svetoforCard(d) {
   </div>`;
 }
 
-// ── Заглушки других табов ──
+function funnelCard(d) {
+  const f = d.funnels;
+  if (!f || (!f.buyer && !f.seller)) return '';
+  return `<div class="card">
+    <div class="eyebrow">Воронка · ${esc((d.funnels.period_label || 'месяц').toLowerCase())}</div>
+    ${sideFunnel('buyer', f.buyer, 'Покупатель')}
+    ${sideFunnel('seller', f.seller, 'Продавец')}
+  </div>`;
+}
+
+function sideFunnel(side, fs, title) {
+  if (!fs) return '';
+  const stages = fs.stages || [];
+  const irCls = fs.ir_status === 'green' ? 'ok' : fs.ir_status === 'yellow' ? 'warn' : 'bad';
+  const stagesHtml = stages.map(st => {
+    const fact = st.fact || 0;
+    const plan = st.plan || 0;
+    const forecast = st.forecast || 0;
+    const factPct = plan > 0 ? Math.min(100, Math.round(fact/plan*100)) : (fact > 0 ? 100 : 0);
+    const forecastDeltaPct = plan > 0 && forecast > fact ? Math.min(100 - factPct, Math.round((forecast-fact)/plan*100)) : 0;
+    const showForecast = st.is_revenue && forecast > fact;
+    const factLabel = esc(st.fact_label || String(fact));
+    const planLabel = esc(st.plan_label || String(plan));
+    return `<div class="funnel-stage">
+      <div class="st-name">${esc(st.label || '')}${st.hint_label ? ` <span class="muted" style="font-weight:400">${esc(st.hint_label)}</span>` : ''}</div>
+      <div class="st-fp"><span class="fact">${factLabel}</span> <span class="plan">/ ${planLabel}</span>${showForecast ? `<div style="font-size:10px;color:var(--warn);font-weight:700">+${fmtK(forecast-fact)}</div>` : ''}</div>
+      <div class="st-bar">
+        ${factPct > 0 ? `<i class="st-fill-fact" style="width:${factPct}%"></i>` : ''}
+        ${forecastDeltaPct > 0 ? `<i class="st-fill-forecast" style="left:${factPct}%;width:${forecastDeltaPct}%"></i>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="funnel-side">
+    <div class="funnel-head">
+      <span class="funnel-dot ${side}"></span>
+      <div class="funnel-title">${side === 'buyer' ? '🛒' : '🏠'} ${esc(title)}</div>
+      <span class="pill ${irCls}" style="margin-left:auto">ИР ${fs.ir || 0}%</span>
+    </div>
+    ${stagesHtml}
+  </div>`;
+}
+
+function tasksPreviewCard(d) {
+  const g = d.tasks && d.tasks.groups;
+  if (!g) return '';
+  const exp = g.expired || [];
+  const today = g.today || [];
+  const week = g.week || [];
+  if (!exp.length && !today.length && !week.length) return '';
+  const grp = (arr, title, cls) => arr.length ? `<div style="font-size:11px;font-weight:800;text-transform:uppercase;color:${cls==='red'?'var(--bad)':'var(--warn)'};margin-top:${arr === exp ? '0' : '10'}px;padding:0 12px 6px">${title} · ${arr.length}</div>${arr.slice(0, 3).map(taskRow).join('')}` : '';
+  return `<div class="card" style="padding:0">
+    <div style="padding:14px 16px 8px;display:flex;justify-content:space-between;align-items:center">
+      <span class="eyebrow">📋 Задачи</span>
+      <span style="font-size:12px;color:var(--petrol);font-weight:700;cursor:pointer" onclick="__goTab('tasks')">все задачи ↗</span>
+    </div>
+    ${grp(exp, '⚠ Просрочено', 'red')}${grp(today, 'Сегодня', 'red')}${grp(week, 'На этой неделе', 'amber')}
+  </div>`;
+}
+
+function taskRow(t) {
+  const authorIcon = t.author_kind === 'self' ? '👤' : t.author_kind === 'manager' ? '👔' : '🤖';
+  const overdue = t.overdue || false;
+  const whenCls = overdue ? 'overdue' : (t.due_date === new Date().toISOString().slice(0,10) ? 'today' : 'week');
+  const dotColor = overdue ? 'var(--bad)' : t.author_kind === 'self' ? 'var(--ok)' : t.author_kind === 'manager' ? '#4F46E5' : 'var(--petrol)';
+  return `<div class="list-row ${overdue ? 'overdue' : ''}" onclick="__openTask('${esc(t.id)}',event)">
+    <span class="lr-dot" style="background:${dotColor}"></span>
+    <div class="lr-body">
+      <div class="lr-title">${authorIcon} ${esc(t.title || '')}</div>
+      <div class="lr-meta">
+        <span class="lr-when ${whenCls}">${esc(t.due_label || t.due_date || 'без срока')}</span>
+        ${t.author_display ? `<span>· ${esc(t.author_display)}</span>` : ''}
+      </div>
+    </div>
+    <div class="lr-actions">
+      ${t.can_complete ? `<button class="lr-done" onclick="__completeTask('${esc(t.id)}',event)" title="Выполнить">✓</button>` : ''}
+    </div>
+  </div>`;
+}
+
+// ============ ФАЗА 2: ВКЛАДКА ПРОГНОЗ ============
+
 function renderPrognozTab(d) {
-  document.getElementById('screen-prognoz').innerHTML = `<div class="empty-tab"><span class="em">📈</span>Вкладка «Прогноз» — в следующей фазе.</div>`;
+  const pt = d.prognoz_tab;
+  const g = d.goal;
+  if (!pt || !pt.monthly || !pt.monthly.length) {
+    document.getElementById('screen-prognoz').innerHTML = `<div class="empty-tab"><span class="em">📈</span>Прогноз появится после месячного снапшота.</div>`;
+    return;
+  }
+  const html = [
+    prognozCycleCard(pt, d),
+    prognozGoalPathCard(pt, d),
+    prognozSegmentsCard(pt),
+  ].filter(Boolean).join('');
+  document.getElementById('screen-prognoz').innerHTML = html;
 }
+
+function prognozCycleCard(pt, d) {
+  const months = pt.monthly || [];
+  const mode = 'dohod';  // По ТЗ v2 — только доход
+  const vals = months.map(m => ({
+    ym: m.ym,
+    fact: m.fact_income || 0,
+    fcst: m.forecast_income || 0,
+    plan: m.plan_income || 0,
+    is_current: m.is_current, is_future: m.is_future, is_past: m.is_past,
+  }));
+  const max = Math.max(...vals.map(v => Math.max(v.fact, v.fcst, v.plan)), 1);
+  const cols = vals.map(v => {
+    const planH = Math.round((v.plan||0)/max*100);
+    const factH = Math.round((v.fact||0)/max*100);
+    const fcstH = v.fcst>0 ? Math.round(v.fcst/max*100) : 0;
+    let bars = '', mainLabel = '—';
+    if (v.is_past) {
+      if (factH>0) bars = `<div class="fact-bar" style="height:${factH}%"><span class="bar-lbl">${fmtK(v.fact)}</span></div>`;
+      mainLabel = v.fact > 0 ? fmtK(v.fact) : '—';
+    } else if (v.is_current) {
+      if (factH>0) bars += `<div class="fact-bar" style="height:${factH}%;border-radius:${fcstH>factH?'0':'6px'} ${fcstH>factH?'0':'6px'} 6px 6px"><span class="bar-lbl" style="font-size:10px">${fmtK(v.fact)}</span></div>`;
+      if (fcstH>factH) {
+        const delta = fcstH - factH;
+        bars += `<div class="fcst-bar" style="bottom:${factH}%;height:${delta}%;border-radius:6px 6px ${factH>0?'0':'6px'} ${factH>0?'0':'6px'}"><span class="bar-lbl">+${fmtK(v.fcst-v.fact)}</span></div>`;
+      }
+      mainLabel = v.fcst>0 ? fmtK(v.fcst) : v.fact>0 ? fmtK(v.fact) : '—';
+    } else if (v.is_future) {
+      if (fcstH>0) bars = `<div class="fcst-bar" style="height:${fcstH}%;bottom:0"><span class="bar-lbl">${fmtK(v.fcst)}</span></div>`;
+      mainLabel = v.fcst > 0 ? fmtK(v.fcst) : '—';
+    }
+    return `<div class="cycle-col">
+      <div class="cur-tag ${v.is_current?'':'hidden'}">${v.is_current ? 'сейчас' : ''}</div>
+      <div class="bar-slot">
+        <div class="plan-bar" style="height:${planH}%"></div>
+        ${bars}
+      </div>
+      <div class="val-label">${mainLabel} / ${fmtK(v.plan)}</div>
+      <div class="mon-label">${monShort(v.ym)}</div>
+    </div>`;
+  }).join('');
+  const factTotal = vals.filter(v => !v.is_future).reduce((s,v) => s+(v.fact||0), 0);
+  const planTotal = vals.reduce((s,v) => s+(v.plan||0), 0);
+  const fcstNext = (vals.find(v => v.is_future) || {}).fcst || 0;
+  return `<div class="card">
+    <div class="eyebrow">📊 Цикл 6 месяцев · доход (моя ЗП)</div>
+    <div class="muted" style="margin-top:2px">Зелёное — факт закрытых сделок, синее — прогноз, штриховка — план.</div>
+    <div class="cycle-bars">${cols}</div>
+    <div class="cycle-legend">
+      <span><i style="background:repeating-linear-gradient(45deg,#cbd5e1 0,#cbd5e1 2px,#e2e8f0 2px,#e2e8f0 4px)"></i>план / цель</span>
+      <span><i style="background:linear-gradient(180deg,#22c55e,#16a34a)"></i>факт</span>
+      <span><i style="background:linear-gradient(180deg,#3b82f6,#1e63d9)"></i>прогноз</span>
+    </div>
+    <div style="font-size:12px;margin-top:6px;color:var(--muted)">
+      За цикл: <b style="color:var(--ink)">${fmtK(factTotal)}</b> из ${fmtK(planTotal)} ЗП · прогноз след: <b style="color:var(--ink)">${fmtK(fcstNext)}</b>
+    </div>
+  </div>`;
+}
+
+function prognozGoalPathCard(pt, d) {
+  const months = pt.monthly || [];
+  // Накопительный доход и путь + зверь
+  const planAcc = []; const factAcc = []; let pS=0, fS=0;
+  let lastCompleted = -1;
+  months.forEach((m,i) => {
+    pS += m.plan_income||0; planAcc.push(pS);
+    if (m.is_future) { factAcc.push(null); return; }
+    fS += m.fact_income||0; factAcc.push(fS);
+    if (m.is_past) lastCompleted = i;
+  });
+  const total = planAcc[planAcc.length-1] || 1;
+  // Зверь по завершённым месяцам
+  let ratio = 0, idx = 0, factVal = 0;
+  if (lastCompleted >= 0) {
+    idx = lastCompleted;
+    factVal = factAcc[idx] || 0;
+    const planVal = planAcc[idx] || 1;
+    ratio = planVal > 0 ? factVal/planVal : 0;
+  } else {
+    const today = new Date();
+    const dim = new Date(today.getFullYear(), today.getMonth()+1, 0).getDate();
+    const day = today.getDate();
+    const curIdx = months.findIndex(m => m.is_current);
+    idx = curIdx >= 0 ? curIdx : 0;
+    factVal = factAcc[idx] || 0;
+    const curPlan = (months[idx] && months[idx].plan_income || 0) * day / dim;
+    ratio = curPlan > 0 ? factVal/curPlan : 0;
+  }
+  let animal, col, label;
+  if (ratio >= 1.05) { animal = 'cheetah'; col = 'var(--ok)'; label = '🐆 гепард — опережаешь!'; }
+  else if (ratio >= 0.85) { animal = 'hare'; col = 'var(--warn)'; label = '🐇 заяц — идёшь ровно'; }
+  else { animal = 'turtle'; col = 'var(--bad)'; label = '🐢 черепаха — поднажми'; }
+
+  const W=920, H=280, pl=44, pr=20, pt2=34, pb=38, cw=W-pl-pr, ch=H-pt2-pb, n=months.length;
+  const x = i => pl + cw * i / (n-1);
+  const y = v => pt2 + ch * (1 - (v||0)/total);
+  let s = '';
+  for (let g=0; g<=4; g++){
+    const gy = pt2 + ch*g/4;
+    s += `<line x1="${pl}" y1="${gy}" x2="${W-pr}" y2="${gy}" stroke="#eef0f4"/>`;
+    s += `<text x="${pl-7}" y="${gy+3}" text-anchor="end" font-size="9" fill="#b4b9c5">${100-g*25}%</text>`;
+  }
+  months.forEach((m,i) => {
+    s += `<text x="${x(i)}" y="${H-12}" text-anchor="middle" font-size="11" fill="#7a8194">${monShort(m.ym)}</text>`;
+  });
+  s += `<polyline points="${planAcc.map((v,i)=>`${x(i)},${y(v)}`).join(' ')}" fill="none" stroke="#cbd5e1" stroke-width="2.5" stroke-dasharray="6 5"/>`;
+  const fpts = factAcc.map((v,i) => v == null ? null : (months[i] && (months[i].is_past || months[i].is_current) ? [x(i), y(v)] : null)).filter(Boolean);
+  if (fpts.length > 1) {
+    const area = `${fpts[0][0]},${y(0)} ${fpts.map(p=>p.join(',')).join(' ')} ${fpts[fpts.length-1][0]},${y(0)}`;
+    s += `<polygon points="${area}" fill="#16a34a" opacity="0.10"/>`;
+    s += `<polyline points="${fpts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#16a34a" stroke-width="3.5" stroke-linecap="round"/>`;
+  }
+  fpts.forEach(p => { s += `<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="#fff" stroke="#16a34a" stroke-width="3"/>`; });
+  // Прогнозная линия (синяя) от последней past через current и future
+  const fpts_forecast = [];
+  let baseAcc = 0, baseIdx = -1;
+  months.forEach((m,i) => { if (m.is_past) { baseAcc += m.fact_income||0; baseIdx = i; }});
+  if (baseIdx >= 0) fpts_forecast.push([x(baseIdx), y(baseAcc)]); else fpts_forecast.push([x(0), y(0)]);
+  let accF = baseAcc;
+  const curIdxLocal = months.findIndex(m => m.is_current);
+  if (curIdxLocal >= 0) {
+    const curFc = Math.max(months[curIdxLocal].forecast_income||0, months[curIdxLocal].fact_income||0);
+    accF += curFc;
+    fpts_forecast.push([x(curIdxLocal), y(accF)]);
+  }
+  const nextFutureIdx = months.findIndex(m => m.is_future);
+  if (nextFutureIdx >= 0 && (months[nextFutureIdx].forecast_income||0) > 0) {
+    accF += months[nextFutureIdx].forecast_income||0;
+    fpts_forecast.push([x(nextFutureIdx), y(accF)]);
+  }
+  if (fpts_forecast.length > 1) {
+    s += `<polyline points="${fpts_forecast.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" opacity="0.85"/>`;
+    for (let i = 1; i < fpts_forecast.length; i++) {
+      const p = fpts_forecast[i];
+      s += `<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="#fff" stroke="#3b82f6" stroke-width="3"/>`;
+    }
+  }
+  // Прогнозная позиция в светофоре
+  const posBadge = (px, py, txt) => `<g transform="translate(${px},${py-12})">
+    <rect x="-32" y="-14" width="64" height="18" rx="9" fill="#3b82f6"/>
+    <text x="0" y="-1" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">${txt}</text>
+  </g>`;
+  if (curIdxLocal >= 0 && fpts_forecast.length >= 2) {
+    const pp = months[curIdxLocal] && months[curIdxLocal].predicted_position;
+    if (pp && pp.pos) s += posBadge(fpts_forecast[1][0], fpts_forecast[1][1], `#${pp.pos}`);
+  }
+  if (nextFutureIdx >= 0 && fpts_forecast.length >= 3) {
+    const pp = months[nextFutureIdx] && months[nextFutureIdx].predicted_position;
+    if (pp && pp.pos) s += posBadge(fpts_forecast[2][0], fpts_forecast[2][1], `#${pp.pos}`);
+  }
+  // Зверь
+  if (fpts.length > 0) {
+    const last = [x(idx), y(factVal)];
+    let beast = '';
+    if (animal === 'cheetah') {
+      beast = `<ellipse cx="0" cy="-12" rx="17" ry="9" fill="${col}"/><circle cx="15" cy="-18" r="7" fill="${col}"/><circle cx="17" cy="-19" r="1.6" fill="#fff"/>`;
+    } else if (animal === 'hare') {
+      beast = `<ellipse cx="0" cy="-10" rx="11" ry="13" fill="${col}"/><circle cx="0" cy="-24" r="8" fill="${col}"/><ellipse cx="-4" cy="-36" rx="3.5" ry="10" fill="${col}"/><ellipse cx="4" cy="-36" rx="3.5" ry="10" fill="${col}"/>`;
+    } else {
+      beast = `<ellipse cx="0" cy="-10" rx="14" ry="10" fill="${col}"/><circle cx="15" cy="-13" r="6" fill="${col}"/>`;
+    }
+    s += `<g transform="translate(${last[0]},${last[1]-6})">
+      <g transform="translate(0,-30)">${beast}</g>
+      <text x="0" y="-50" text-anchor="middle" font-size="11" font-weight="800" fill="${col}">это я!</text>
+      <text x="0" y="20" text-anchor="middle" font-size="10" font-weight="600" fill="${col}">${label}</text>
+    </g>`;
+  }
+  // Прогноз позиции подпись
+  const curM = months.find(m => m.is_current);
+  const nxtM = months.find(m => m.is_future);
+  const curPP = curM && curM.predicted_position;
+  const nxtPP = nxtM && nxtM.predicted_position;
+  let posLine = '';
+  if (curPP || nxtPP) {
+    const parts = [];
+    if (curPP) parts.push(`<b>${monShort(curM.ym)}</b>: место <b style="color:#3b82f6">#${curPP.pos}</b> <span style="color:var(--muted)">(${esc(curPP.category||'')})</span>`);
+    if (nxtPP) parts.push(`<b>${monShort(nxtM.ym)}</b>: место <b style="color:#3b82f6">#${nxtPP.pos}</b> <span style="color:var(--muted)">(${esc(nxtPP.category||'')})</span>`);
+    posLine = `<div style="margin-top:10px;font-size:12px;color:var(--ink);background:var(--petrol-soft);border:1px solid var(--line);border-radius:8px;padding:9px 12px">📍 <b>По прогнозу дохода твоя позиция в светофоре</b>: ${parts.join(' · ')}</div>`;
+  }
+  return `<div class="card">
+    <div class="eyebrow">🎯 Как я иду к цели по доходу</div>
+    <div class="muted" style="margin-top:2px">Накопительный доход за цикл vs плановый темп.</div>
+    <div style="display:flex;gap:14px;font-size:11px;color:var(--muted);margin-top:8px;flex-wrap:wrap">
+      <span><i style="display:inline-block;width:11px;height:3px;background:#16a34a;vertical-align:middle;margin-right:5px"></i>факт</span>
+      <span><i style="display:inline-block;width:11px;height:3px;background:#3b82f6;vertical-align:middle;margin-right:5px"></i>прогноз (тек. мес + след.)</span>
+      <span><i style="display:inline-block;width:11px;height:3px;background:#cbd5e1;vertical-align:middle;margin-right:5px"></i>план цикла</span>
+    </div>
+    <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;margin-top:8px">${s}</svg>
+    ${posLine}
+  </div>`;
+}
+
+function prognozSegmentsCard(pt) {
+  if (!pt.segments || !pt.segments.length) return '';
+  const tot = pt.totals || {};
+  const rows = pt.segments.map(s => {
+    const headParts = [];
+    if (s.b_deals > 0) headParts.push(`<span class="muted">🛒 покуп: <b style="color:var(--ink)">${s.b_deals}</b> · ${fmtK(s.b_revenue)} ₽</span>`);
+    if (s.s_deals > 0) headParts.push(`<span class="muted">🏠 прод: <b style="color:var(--ink)">${s.s_deals}</b> · ${fmtK(s.s_revenue)} ₽</span>`);
+    return `<div style="border:1px solid var(--line);border-radius:10px;padding:11px 13px;display:flex;align-items:center;gap:11px;margin-top:8px">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:700">${esc(s.label)}</div>
+        <div style="font-size:11px;margin-top:3px;display:flex;gap:11px;flex-wrap:wrap">${headParts.join('')}</div>
+      </div>
+      <div style="text-align:right;white-space:nowrap">
+        <div style="font-size:15px;font-weight:800;color:var(--ok)">${fmtK(s.total_revenue)} ₽</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase">${s.total_deals} сделок</div>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="card">
+    <div class="eyebrow">💰 Сделки за цикл по сегментам</div>
+    <div class="muted" style="margin-top:2px">Что закрыто за 6 мес. Доход ≈ 48% от вала.</div>
+    ${rows}
+    <div style="margin-top:12px;padding:11px 13px;background:var(--ok-soft);border:1px solid #B7E4C7;border-radius:10px;display:flex;justify-content:space-between;align-items:center">
+      <div><div style="font-size:11px;color:var(--ok);font-weight:800;text-transform:uppercase">ИТОГО ЗА ЦИКЛ</div><div style="font-size:13px;color:var(--muted)">${tot.deals || 0} сделок</div></div>
+      <div style="text-align:right"><div style="font-size:19px;font-weight:800;color:var(--ok)">${fmtK(tot.revenue||0)} ₽</div><div style="font-size:12px;color:var(--muted)">≈ ${fmtK(tot.income||0)} ЗП</div></div>
+    </div>
+  </div>`;
+}
+
+// ============ ФАЗА 3: ТРЕНЕР ============
+
 function renderCoachTab(d) {
-  document.getElementById('screen-coach').innerHTML = `<div class="empty-tab"><span class="em">🎓</span>Вкладка «Тренер» — в следующей фазе.</div>`;
+  const coach = d.coach;
+  if (!coach || (!coach.buyer && !coach.seller)) {
+    document.getElementById('screen-coach').innerHTML = `<div class="empty-tab"><span class="em">🎓</span>Диагностика появится после ночного расчёта.</div>`;
+    return;
+  }
+  const html = [
+    coachSide('buyer', coach.buyer, 'Покупатель', '🛒'),
+    coachSide('seller', coach.seller, 'Продавец', '🏠'),
+    aiCoachCard(d),
+  ].filter(Boolean).join('');
+  document.getElementById('screen-coach').innerHTML = html || '<div class="empty-tab">Данных нет</div>';
 }
+
+function coachSide(side, c, title, emoji) {
+  if (!c) return '';
+  const rec = c.recommendation_for_realtor || c.variant_data?.recommendation_for_realtor || '';
+  const weak = (c.weak_points || []).map(w => `<div class="weak-item">
+    <span class="wl">⚠ ${esc(w.bit_label || w.bit_key || '')}</span>
+    <span class="wr">${esc(w.actual || '')} / порог ${esc(w.threshold || '')}</span>
+  </div>`).join('');
+  return `<div class="card">
+    <div class="card-h">
+      <span class="eyebrow">${emoji} ${esc(title)}</span>
+    </div>
+    ${rec ? `<div style="font-size:13px;margin-top:6px;padding:10px 12px;background:var(--petrol-soft);border-radius:8px;line-height:1.5">💡 ${esc(rec)}</div>` : ''}
+    ${weak ? `<div style="margin-top:10px">${weak}</div>` : '<div class="muted" style="margin-top:8px">Слабых мест не найдено.</div>'}
+  </div>`;
+}
+
+function aiCoachCard(d) {
+  const ai = d.ai_coach;
+  if (!ai || (!ai.coach_text && !ai.motivator_text)) return '';
+  return `<div class="card" style="background:linear-gradient(150deg,var(--petrol-soft),#F1F6F7);border-color:var(--petrol-soft)">
+    <div class="eyebrow" style="color:var(--petrol)">✨ ИИ-тренер</div>
+    ${ai.motivator_text ? `<div style="font-size:13px;line-height:1.55;margin-top:6px">${esc(ai.motivator_text)}</div>` : ''}
+    ${ai.coach_text ? `<div style="font-size:13px;line-height:1.55;margin-top:10px;color:var(--ink-2)">${esc(ai.coach_text)}</div>` : ''}
+    ${ai.generated_at ? `<div class="muted" style="margin-top:8px;font-size:10.5px">Сгенерировано ${new Date(ai.generated_at).toLocaleDateString('ru-RU')} · ${esc(ai.model || 'YandexGPT')}</div>` : ''}
+  </div>`;
+}
+
+// ============ ФАЗА 4: КЛИЕНТЫ (заглушка Coming Soon 01.09) ============
+
 function renderClientsTab(d) {
   document.getElementById('screen-clients').innerHTML = `
     <div class="card" style="text-align:center;padding:40px 20px">
@@ -330,9 +751,90 @@ function renderClientsTab(d) {
       <div class="muted" style="max-width:400px;margin:0 auto">Полный список клиентов с историей, статусами и подсказками ИИ. Подтянем из CRM «Этажей».</div>
     </div>`;
 }
+
+// ============ ФАЗА 5: ЗАДАЧИ ============
+
 function renderTasksTab(d) {
-  document.getElementById('screen-tasks').innerHTML = `<div class="empty-tab"><span class="em">📋</span>Вкладка «Задачи» — в следующей фазе.</div>`;
+  const tasks = d.tasks || {};
+  const groups = tasks.groups || {};
+  const all = [
+    ...(groups.expired || []).map(t => ({...t, _bucket: 'expired'})),
+    ...(groups.today || []).map(t => ({...t, _bucket: 'today'})),
+    ...(groups.week || []).map(t => ({...t, _bucket: 'week'})),
+    ...(groups.later || []).map(t => ({...t, _bucket: 'later'})),
+  ];
+  const done = (groups.done_recent || []).map(t => ({...t, _bucket: 'done'}));
+
+  const filter = CTX.taskFilter || 'all';
+  let filtered;
+  if (filter === 'overdue') filtered = all.filter(t => t._bucket === 'expired');
+  else if (filter === 'today') filtered = all.filter(t => t._bucket === 'today');
+  else if (filter === 'week') filtered = all.filter(t => t._bucket === 'week');
+  else if (filter === 'later') filtered = all.filter(t => t._bucket === 'later');
+  else if (filter === 'done') filtered = done;
+  else filtered = all;
+
+  const cnts = {
+    all: all.length,
+    overdue: (groups.expired || []).length,
+    today: (groups.today || []).length,
+    week: (groups.week || []).length,
+    later: (groups.later || []).length,
+    done: done.length,
+  };
+
+  const filterBtn = (val, label, count) => `<button class="lf-btn ${filter===val?'on':''}" onclick="__setTaskFilter('${val}')">${label}${count!=null?` <span style="opacity:.7">${count}</span>`:''}</button>`;
+
+  const rows = filtered.length
+    ? filtered.map(taskRow).join('')
+    : `<div class="empty-tab" style="padding:40px">🎉 Нет задач по этому фильтру.</div>`;
+
+  document.getElementById('screen-tasks').innerHTML = `
+    <div class="card" style="padding:12px">
+      <div class="task-filters">
+        ${filterBtn('all','Все',cnts.all)}
+        ${cnts.overdue ? filterBtn('overdue','⚠ Просрочено',cnts.overdue) : ''}
+        ${filterBtn('today','Сегодня',cnts.today)}
+        ${filterBtn('week','Неделя',cnts.week)}
+        ${cnts.later ? filterBtn('later','Позже',cnts.later) : ''}
+        ${filterBtn('done','Выполнено',cnts.done)}
+      </div>
+      <div>${rows}</div>
+    </div>`;
 }
+
+window.__setTaskFilter = (f) => {
+  CTX.taskFilter = f;
+  renderTasksTab(CTX.data);
+};
+
+window.__goTab = (name) => {
+  const t = document.querySelector(`.tab[data-tab="${name}"]`);
+  if (t) t.click();
+};
+
+window.__openTask = async (taskId, ev) => {
+  if (ev) ev.stopPropagation();
+  try {
+    const db = getDatabase(getApp());
+    await openTaskDetail({ db, ownerCode: CTX.target, taskId });
+  } catch (e) { console.error(e); alert('Не удалось открыть задачу: ' + (e.message || e)); }
+};
+
+window.__completeTask = async (taskId, ev) => {
+  if (ev) ev.stopPropagation();
+  const btn = ev && ev.target && ev.target.closest && ev.target.closest('button');
+  const row = ev && ev.target && ev.target.closest && ev.target.closest('.list-row');
+  if (btn) { btn.disabled = true; btn.textContent = '…'; }
+  try {
+    const fns = getFunctions(getApp(), 'europe-west1');
+    await httpsCallable(fns, 'updateTaskStatus')({ task_id: taskId, status: 'done' });
+    if (row) { row.style.transition = 'opacity .2s'; row.style.opacity = '0'; setTimeout(() => row.remove(), 250); }
+  } catch (e) {
+    alert('Не удалось: ' + (e.message || e));
+    if (btn) { btn.disabled = false; btn.textContent = '✓'; }
+  }
+};
 
 window.__logout = async () => { await logout(); };
 </script>

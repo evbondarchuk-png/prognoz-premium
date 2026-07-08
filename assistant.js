@@ -5,6 +5,9 @@
  * LLM (YandexGPT) подключим на этапе 2 через существующий контур ИИ-тренера.
  */
 
+import { getApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-functions.js';
+
 let ctxData = null;
 let opened = false;
 
@@ -341,12 +344,35 @@ function addMsg(role, html) {
   body.scrollTop = body.scrollHeight;
 }
 
-window.__pAsk = (q) => {
+let _askFn = null;
+function callPrognosha(question) {
+  if (!_askFn) _askFn = httpsCallable(getFunctions(getApp(), 'europe-west1'), 'askPrognosha', { timeout: 45000 });
+  return _askFn({ question }).then((r) => r.data);
+}
+function fmtAnswer(t) { return esc(t).replace(/\n/g, '<br>'); }
+function showTyping() {
+  const body = document.getElementById('p-body');
+  const w = document.createElement('div');
+  w.className = 'p-msg bot';
+  w.innerHTML = `<div class="p-bubble" style="color:var(--muted)">Прогноша печатает…</div>`;
+  body.appendChild(w);
+  body.scrollTop = body.scrollHeight;
+  return w;
+}
+
+// Вопрос → бэкенд askPrognosha (YandexGPT). Если ИИ недоступен — откат на шаблон.
+window.__pAsk = async (q) => {
   addMsg('user', esc(q));
-  setTimeout(() => {
-    const answer = generateAnswer(q);
-    addMsg('bot', answer);
-  }, 350);
+  const typing = showTyping();
+  try {
+    const res = await callPrognosha(q);
+    typing.remove();
+    addMsg('bot', res && res.answer ? fmtAnswer(res.answer) : generateAnswer(q));
+  } catch (e) {
+    typing.remove();
+    addMsg('bot', generateAnswer(q));
+    console.warn('[prognosha] ИИ недоступен, показал шаблон:', e && e.message);
+  }
 };
 
 window.__pSend = () => {

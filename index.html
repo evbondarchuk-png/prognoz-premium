@@ -176,7 +176,7 @@ import { getApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.j
 import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-functions.js';
 import { openTaskDetail } from './calendar.js';
 import { getDatabase } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js';
-import { initAssistant } from './assistant.js?v=6';
+import { initAssistant } from './assistant.js?v=7';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const initials = (name) => (String(name||'').trim().split(/\s+/).map(p=>p[0]||'').slice(0,2).join('') || '?').toUpperCase();

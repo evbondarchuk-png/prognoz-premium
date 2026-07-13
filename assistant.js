@@ -14,20 +14,20 @@ let opened = false;
 const CSS = `
 /* Прогноша — плавающая кнопка */
 .prognosha-fab{
-  position:fixed;bottom:20px;right:20px;z-index:100;
+  position:fixed;bottom:var(--sp-5);right:var(--sp-5);z-index:100;
   width:60px;height:60px;border-radius:50%;
   background:linear-gradient(150deg,var(--petrol),var(--petrol-deep));
   border:none;color:#fff;cursor:pointer;font-size:26px;
-  box-shadow:0 6px 20px rgba(12,84,96,.35);
+  box-shadow:var(--shadow-lg),0 0 20px rgba(12,84,96,.2);
   display:flex;align-items:center;justify-content:center;
   animation:pFabBob 2.4s ease-in-out infinite;
-  transition:transform .18s;
+  transition:transform var(--transition);
 }
 .prognosha-fab:hover{transform:scale(1.08)}
 .prognosha-fab .p-fox{width:44px;height:44px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 1px 2px rgba(0,0,0,.18))}
 @keyframes pFabBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 .prognosha-fab .dot{
-  position:absolute;top:6px;right:6px;
+  position:absolute;top:var(--sp-1);right:var(--sp-1);
   width:12px;height:12px;background:var(--gold);border-radius:50%;
   border:2px solid #fff;
 }
@@ -36,56 +36,58 @@ const CSS = `
 .prognosha-sheet{
   position:fixed;bottom:0;right:0;z-index:110;
   width:min(420px,100vw);height:min(72vh,720px);
-  background:var(--card);border-radius:16px 16px 0 0;
-  box-shadow:0 -8px 40px rgba(0,0,0,.14);
+  background:var(--card);border-radius:var(--r-xl) var(--r-xl) 0 0;
+  box-shadow:var(--shadow-lg);
   display:flex;flex-direction:column;
-  transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+  transform:translateY(100%);transition:transform .28s var(--ease);
 }
 .prognosha-sheet.on{transform:translateY(0)}
 @media(min-width:640px){
-  .prognosha-sheet{margin:0 20px 20px 0;border-radius:16px;height:min(70vh,680px)}
+  .prognosha-sheet{margin:0 var(--sp-5) var(--sp-5) 0;border-radius:var(--r-xl);height:min(70vh,680px)}
 }
 
 .p-head{
   background:linear-gradient(150deg,var(--petrol),var(--petrol-deep));
-  color:#fff;padding:14px 16px;
-  border-radius:16px 16px 0 0;
-  display:flex;align-items:center;gap:10px;
+  color:#fff;padding:var(--sp-3) var(--sp-4);
+  border-radius:var(--r-xl) var(--r-xl) 0 0;
+  display:flex;align-items:center;gap:var(--sp-3);
 }
 .p-head .p-face{width:36px;height:36px;background:#FFF7EE;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:2px;box-sizing:border-box}
 .p-head .p-face svg{width:100%;height:100%}
-.p-head .p-title{flex:1;font-weight:800;font-size:14px}
-.p-head .p-sub{font-size:11px;opacity:.7;font-weight:600}
-.p-close{background:rgba(255,255,255,.12);border:none;color:#fff;font-size:16px;width:32px;height:32px;border-radius:8px;cursor:pointer}
+.p-head .p-title{flex:1;font-weight:var(--fw-eb);font-size:var(--fs-base)}
+.p-head .p-sub{font-size:var(--fs-xs);opacity:.7;font-weight:var(--fw-sb)}
+.p-close{background:rgba(255,255,255,.12);border:none;color:#fff;font-size:var(--fs-md);width:32px;height:32px;border-radius:var(--r-sm);cursor:pointer;transition:background var(--transition)}
+.p-close:hover{background:rgba(255,255,255,.22)}
 
-.p-body{flex:1;overflow-y:auto;padding:14px}
+.p-body{flex:1;overflow-y:auto;padding:var(--sp-3)}
 .p-brief{
   background:var(--petrol-soft);
-  border-radius:14px;padding:14px;
-  font-size:13.5px;line-height:1.55;color:var(--ink);
+  border-radius:var(--r-md);padding:var(--sp-3);
+  font-size:var(--fs-sm);line-height:1.55;color:var(--ink);
   border:1px solid rgba(12,84,96,.12);
 }
 .p-brief b{color:var(--petrol)}
-.p-brief-h{font-size:11px;font-weight:800;color:var(--petrol);text-transform:uppercase;letter-spacing:.03em;margin-bottom:6px}
+.p-brief-h{font-size:var(--fs-xs);font-weight:var(--fw-eb);color:var(--petrol);text-transform:uppercase;letter-spacing:.03em;margin-bottom:var(--sp-1)}
 
-.p-suggests{margin-top:12px;display:flex;flex-direction:column;gap:6px}
-.p-suggest{background:var(--card-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer;text-align:left;font-family:inherit;transition:.1s}
+.p-suggests{margin-top:var(--sp-3);display:flex;flex-direction:column;gap:var(--sp-1)}
+.p-suggest{background:var(--card-2);border:1px solid var(--line);border-radius:var(--r-md);padding:var(--sp-2) var(--sp-3);font-size:var(--fs-sm);font-weight:var(--fw-sb);color:var(--ink);cursor:pointer;text-align:left;font-family:inherit;transition:background var(--transition),border-color var(--transition)}
 .p-suggest:hover{background:var(--petrol-soft);border-color:var(--petrol);color:var(--petrol)}
 
-.p-msg{margin-top:12px}
+.p-msg{margin-top:var(--sp-3)}
 .p-msg.user{text-align:right}
-.p-msg .p-bubble{display:inline-block;max-width:82%;padding:10px 13px;border-radius:14px;font-size:13px;line-height:1.5;text-align:left}
+.p-msg .p-bubble{display:inline-block;max-width:82%;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);font-size:var(--fs-sm);line-height:1.5;text-align:left}
 .p-msg.user .p-bubble{background:var(--petrol);color:#fff;border-bottom-right-radius:5px}
 .p-msg.bot .p-bubble{background:var(--card-2);color:var(--ink);border-bottom-left-radius:5px;border:1px solid var(--line)}
 .p-msg.bot .p-bubble b{color:var(--petrol)}
-.p-msg.bot .p-bubble em{font-style:normal;background:var(--gold-soft);color:var(--gold);padding:1px 6px;border-radius:6px;font-weight:800;font-size:12px}
+.p-msg.bot .p-bubble em{font-style:normal;background:var(--gold-soft);color:var(--gold);padding:1px 6px;border-radius:var(--r-xs);font-weight:var(--fw-eb);font-size:var(--fs-sm)}
 
-.p-foot{border-top:1px solid var(--line);padding:12px;display:flex;gap:8px;align-items:center;background:var(--card)}
-.p-input{flex:1;border:1px solid var(--line);border-radius:22px;padding:9px 14px;font-family:inherit;font-size:13.5px;outline:none;transition:.15s;background:var(--card-2)}
+.p-foot{border-top:1px solid var(--line);padding:var(--sp-3);display:flex;gap:var(--sp-2);align-items:center;background:var(--card)}
+.p-input{flex:1;border:1px solid var(--line);border-radius:var(--r-pill);padding:var(--sp-2) var(--sp-3);font-family:inherit;font-size:var(--fs-sm);outline:none;transition:border-color var(--transition),background var(--transition);background:var(--card-2)}
 .p-input:focus{border-color:var(--petrol);background:var(--card)}
-.p-send{background:var(--petrol);color:#fff;border:none;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.p-send{background:var(--petrol);color:#fff;border:none;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:var(--fs-md);display:flex;align-items:center;justify-content:center;transition:background var(--transition)}
+.p-send:hover{background:var(--petrol-deep)}
 .p-send:disabled{opacity:.4;cursor:not-allowed}
-.p-typing{font-size:12px;color:var(--muted);padding:4px 8px}
+.p-typing{font-size:var(--fs-sm);color:var(--muted);padding:var(--sp-1) var(--sp-2)}
 
 /* Рисованный маскот (картинка) — круглый аватар */
 .fox-img{width:100%;height:100%;object-fit:cover;object-position:50% 28%;border-radius:50%;display:block}

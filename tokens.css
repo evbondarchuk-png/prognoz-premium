@@ -1,22 +1,175 @@
-/* Дизайн-токены Премиума. Единственное место где определены цвета/шрифты/радиусы. */
-:root{
-  --paper:#EDF0F1;--card:#FFF;--card-2:#F7F8F9;
-  --ink:#15191C;--ink-2:#41494F;--muted:#727C83;
-  --line:#E4E8EA;--line-2:#EEF1F2;
-  --petrol:#0C5460;--petrol-deep:#073B43;--petrol-soft:#E4EEF0;
-  --gold:#A86A12;--gold-soft:#FAF1DD;--gold-line:#EBD8AF;
-  --ok:#1F7A43;--ok-soft:#E5F2EA;
-  --warn:#B26B0E;--warn-soft:#FBF0DE;
-  --bad:#B5302A;--bad-soft:#FBE7E5;--bad-line:#F1CFCC;
-  --r:16px;--r-sm:12px;
-  --shadow:0 1px 2px rgba(20,25,28,.04),0 8px 26px rgba(20,25,28,.06);
+/* ============================================================
+   Премиум v2 — дизайн-система (обновлённая 2026-07-13)
+   Единственный источник правды для цветов/шрифтов/отступов/теней.
+   ============================================================ */
+
+/* --- Google Fonts (Golos Text 400–800) --- */
+@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* === Палитра: «Петроль обновлённый» === */
+  --paper:       #F8FAFB;
+  --card:        #FFFFFF;
+  --card-2:      #F1F4F6;
+
+  --ink:         #0F172A;   /* Slate-900 — глубокий чёрный */
+  --ink-2:       #475569;   /* Slate-600 — вторичный текст */
+  --muted:       #94A3B8;   /* Slate-400 — третичный/отключённый */
+
+  --line:        #E2E8F0;   /* Slate-200 — основные границы */
+  --line-2:      #F1F5F9;   /* Slate-100 — тонкие разделители */
+
+  /* Бренд */
+  --petrol:      #0C5460;
+  --petrol-deep: #073B43;
+  --petrol-soft: #E8F0F2;
+
+  /* Акцент (доход/вал) */
+  --gold:        #C4841D;
+  --gold-soft:   #FDF6EB;
+  --gold-line:   #F0D5A8;
+
+  /* Статусы */
+  --ok:          #16A34A;
+  --ok-soft:     #ECFDF5;
+  --ok-line:     #BBF7D0;
+
+  --warn:        #D97706;
+  --warn-soft:   #FFFBEB;
+  --warn-line:   #FDE68A;
+
+  --bad:         #DC2626;
+  --bad-soft:    #FEF2F2;
+  --bad-line:    #FECACA;
+
+  /* === Тени (3 уровня) === */
+  --shadow-sm:   0 1px 2px rgba(0,0,0,.03);
+  --shadow:      0 1px 3px rgba(0,0,0,.04), 0 6px 16px rgba(0,0,0,.06);
+  --shadow-lg:   0 4px 12px rgba(0,0,0,.06), 0 20px 40px rgba(0,0,0,.08);
+
+  /* === Радиусы === */
+  --r-xs:   6px;
+  --r-sm:   8px;
+  --r-md:  12px;
+  --r-lg:  16px;
+  --r-xl:  20px;
+  --r-pill: 999px;
+
+  /* === Отступы === */
+  --sp-1:   4px;
+  --sp-2:   8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-5:  20px;
+  --sp-6:  24px;
+  --sp-7:  32px;
+  --sp-8:  48px;
+
+  /* === Шрифт: размеры === */
+  --fs-xs:  11px;
+  --fs-sm:  12px;
+  --fs-base:14px;
+  --fs-md:  16px;
+  --fs-lg:  20px;
+  --fs-xl:  24px;
+  --fs-2xl: 32px;
+
+  /* === Шрифт: веса === */
+  --fw-r:   400;
+  --fw-m:   500;
+  --fw-sb:  600;
+  --fw-b:   700;
+  --fw-eb:  800;
+
+  /* === Переходы === */
+  --ease:    cubic-bezier(.4,0,.2,1);
+  --dur:     0.2s;
+  --transition: var(--dur) var(--ease);
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:'Golos Text','Inter',-apple-system,system-ui,sans-serif;
-  background:var(--paper);color:var(--ink);
-  font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;
+
+/* === Базовые стили === */
+* { box-sizing: border-box; margin: 0; padding: 0 }
+
+body {
+  font-family: 'Golos Text', 'Inter', -apple-system, system-ui, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: var(--fs-base);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
-.num{font-variant-numeric:tabular-nums}
-button{font-family:inherit;cursor:pointer}
-a{color:var(--petrol);text-decoration:none}
+
+/* === Утилиты === */
+.num     { font-variant-numeric: tabular-nums }
+.muted   { color: var(--muted); font-size: var(--fs-sm) }
+button   { font-family: inherit; cursor: pointer }
+a        { color: var(--petrol); text-decoration: none }
+img      { max-width: 100%; display: block }
+
+/* === Карточки === */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+  padding: var(--sp-4);
+}
+
+/* === Пills / бейджи === */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: 2px var(--sp-2);
+  border-radius: var(--r-pill);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-eb);
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+}
+.pill.ok   { background: var(--ok-soft);   color: var(--ok) }
+.pill.warn { background: var(--warn-soft); color: var(--warn) }
+.pill.bad  { background: var(--bad-soft);  color: var(--bad) }
+
+/* === Кнопки === */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--r-sm);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-sb);
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition), opacity var(--transition);
+}
+.btn-primary {
+  background: var(--petrol);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--petrol-deep) }
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-2);
+  border: 1px solid var(--line);
+}
+.btn-ghost:hover { background: var(--card-2) }
+
+/* === Прогресс-бары === */
+.bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--card-2);
+  overflow: hidden;
+}
+.bar > i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.4s var(--ease);
+}
+.bar > i.ok   { background: var(--ok) }
+.bar > i.warn { background: var(--warn) }
+.bar > i.bad  { background: var(--bad) }

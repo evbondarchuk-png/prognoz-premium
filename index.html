@@ -4,129 +4,119 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
   <title>Прогноз · Премиум</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script type="importmap">
   { "imports": { "https://www.gstatic.com/firebasejs/10.7.0/": "/libs/firebase/10.7.0/" } }
   </script>
   <link rel="stylesheet" href="tokens.css">
   <style>
     /* ============ КАРКАС ============ */
-    .wrap{max-width:1024px;margin:0 auto;padding-bottom:80px}
+    .wrap{max-width:1024px;margin:0 auto;padding-bottom:var(--sp-8)}
     @media(max-width:640px){.wrap{padding-bottom:100px}}
 
     /* HERO — тёмная петроловая шапка */
-    .top{background:linear-gradient(160deg,var(--petrol),var(--petrol-deep));color:#fff;padding:20px 20px 22px;position:sticky;top:0;z-index:10}
-    .top-inner{max-width:1024px;margin:0 auto;display:flex;align-items:center;gap:14px}
-    .avatar{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0}
+    .top{background:linear-gradient(160deg,var(--petrol),var(--petrol-deep));color:#fff;padding:var(--sp-5) var(--sp-5) 22px;position:sticky;top:0;z-index:10;box-shadow:0 4px 20px rgba(7,59,67,.15)}
+    .top-inner{max-width:1024px;margin:0 auto;display:flex;align-items:center;gap:var(--sp-3);flex-wrap:wrap}
+    .avatar{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-weight:var(--fw-eb);font-size:var(--fs-md);flex-shrink:0;backdrop-filter:blur(4px)}
     .who{flex:1;min-width:0}
-    .who .role{display:inline-block;background:rgba(255,255,255,.16);border-radius:6px;padding:2px 8px;font-weight:700;font-size:10px;margin-right:6px;letter-spacing:.03em;text-transform:uppercase}
-    .who h1{font-size:17px;font-weight:800;line-height:1.2;margin:6px 0 3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .who .meta{font-size:11px;color:rgba(255,255,255,.72);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .top-actions{display:flex;gap:6px;flex-shrink:0}
-    .top-btn{background:rgba(255,255,255,.12);border:none;color:#fff;font-family:inherit;font-size:14px;padding:8px;border-radius:10px;cursor:pointer;line-height:1;min-width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center}
+    .who .role{display:inline-block;background:rgba(255,255,255,.16);border-radius:var(--r-xs);padding:2px var(--sp-2);font-weight:var(--fw-b);font-size:var(--fs-xs);margin-right:var(--sp-1);letter-spacing:.03em;text-transform:uppercase;backdrop-filter:blur(4px)}
+    .who h1{font-size:var(--fs-md);font-weight:var(--fw-eb);line-height:1.2;margin:6px 0 3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .who .meta{font-size:var(--fs-xs);color:rgba(255,255,255,.72);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .top-actions{display:flex;gap:var(--sp-1);flex-shrink:0}
+    .top-btn{background:rgba(255,255,255,.12);border:none;color:#fff;font-family:inherit;font-size:var(--fs-base);padding:var(--sp-2);border-radius:var(--r-sm);cursor:pointer;line-height:1;min-width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;transition:background var(--transition)}
     .top-btn:hover{background:rgba(255,255,255,.22)}
 
     /* Табы */
-    .tabs{max-width:1024px;margin:0 auto;padding:0 12px;display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:88px;z-index:9}
+    .tabs{max-width:1024px;margin:0 auto;padding:0 var(--sp-3);display:flex;gap:var(--sp-1);overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:88px;z-index:9}
     @media(max-width:640px){.tabs{top:86px}}
-    .tab{flex:0 0 auto;padding:14px 16px;font-size:13px;font-weight:700;color:var(--muted);border:none;background:transparent;cursor:pointer;font-family:inherit;border-bottom:2px solid transparent;white-space:nowrap;transition:.12s}
+    .tab{flex:0 0 auto;padding:var(--sp-4) var(--sp-4);font-size:var(--fs-sm);font-weight:var(--fw-b);color:var(--muted);border:none;background:transparent;cursor:pointer;font-family:inherit;border-bottom:2px solid transparent;white-space:nowrap;transition:color var(--transition),border-color var(--transition)}
     .tab:hover{color:var(--ink)}
     .tab.on{color:var(--petrol);border-bottom-color:var(--petrol)}
     .tab .em{font-size:15px;margin-right:5px}
 
     /* КАРТОЧКИ */
-    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);margin:12px;padding:16px}
-    @media(min-width:900px){.card{margin:16px}}
-    .card-h{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-    .eyebrow{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);margin:var(--sp-3);padding:var(--sp-4);transition:box-shadow var(--transition)}
+    @media(min-width:900px){.card{margin:var(--sp-4)}}
+    .card-h{display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-3)}
+    .eyebrow{font-size:var(--fs-xs);font-weight:var(--fw-eb);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
     .card-h .eyebrow{flex:1}
-    .big{font-size:32px;font-weight:800;letter-spacing:-.5px;line-height:1.05}
-    .pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;padding:4px 11px;border-radius:999px}
-    .pill.ok{background:var(--ok-soft);color:var(--ok)}
-    .pill.warn{background:var(--warn-soft);color:var(--warn)}
-    .pill.bad{background:var(--bad-soft);color:var(--bad)}
-    .row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-    .muted{color:var(--muted);font-size:12px}
-    .stack{height:32px;background:var(--card-2);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;position:relative;margin-top:10px}
-    .stack .fact{background:var(--petrol);display:flex;align-items:center;padding:0 10px;color:#fff;font-weight:800;font-size:12px}
+    .big{font-size:var(--fs-2xl);font-weight:var(--fw-eb);letter-spacing:-.5px;line-height:1.05}
+    .row{display:flex;align-items:baseline;gap:var(--sp-3);flex-wrap:wrap}
+    .stack{height:32px;background:var(--card-2);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;display:flex;position:relative;margin-top:var(--sp-3)}
+    .stack .fact{background:var(--petrol);display:flex;align-items:center;padding:0 var(--sp-3);color:#fff;font-weight:var(--fw-eb);font-size:var(--fs-sm)}
 
     /* Компонентные полосы */
-    .comp-row{display:grid;grid-template-columns:70px 1fr auto;gap:10px;align-items:center;margin-top:10px;font-size:12px}
-    .comp-row .cn{color:var(--ink-2);font-weight:600}
-    .comp-row .cv{font-weight:800;white-space:nowrap;color:var(--ink);min-width:36px;text-align:right}
-    .stripe{height:6px;border-radius:3px;background:var(--card-2);overflow:hidden}
-    .stripe>i{display:block;height:100%;border-radius:3px;background:var(--petrol);transition:width .3s ease}
+    .comp-row{display:grid;grid-template-columns:70px 1fr auto;gap:var(--sp-3);align-items:center;margin-top:var(--sp-3);font-size:var(--fs-sm)}
+    .comp-row .cn{color:var(--ink-2);font-weight:var(--fw-sb)}
+    .comp-row .cv{font-weight:var(--fw-eb);white-space:nowrap;color:var(--ink);min-width:36px;text-align:right}
 
     /* Баннер */
-    .banner{background:var(--warn-soft);border:1px solid #F0D5AA;color:var(--warn);border-radius:12px;padding:12px 14px;margin:12px;font-size:12.5px;line-height:1.45}
+    .banner{background:var(--warn-soft);border:1px solid var(--warn-line);color:var(--warn);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-3);margin:var(--sp-3);font-size:var(--fs-sm);line-height:1.45}
     .banner b{color:var(--ink)}
 
     /* Loader / пусто */
-    .loader{padding:40px;text-align:center;color:var(--muted)}
-    .empty-tab{padding:60px 20px;text-align:center;color:var(--muted);font-size:14px}
-    .empty-tab .em{font-size:32px;margin-bottom:10px;display:block}
+    .loader{padding:var(--sp-8);text-align:center;color:var(--muted)}
+    .empty-tab{padding:60px var(--sp-5);text-align:center;color:var(--muted);font-size:var(--fs-base)}
+    .empty-tab .em{font-size:var(--fs-2xl);margin-bottom:var(--sp-3);display:block}
 
     /* Экран */
     .screen{display:none}
     .screen.on{display:block}
 
     /* Прогноз (вал/доход) карточки */
-    .money-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+    .money-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3);margin-top:var(--sp-3)}
     @media(max-width:520px){.money-grid{grid-template-columns:1fr}}
-    .money-cell{background:var(--card-2);border:1px solid var(--line);border-radius:12px;padding:14px 15px}
+    .money-cell{background:var(--card-2);border:1px solid var(--line);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4)}
     .money-cell.gold{background:var(--gold-soft);border-color:var(--gold-line)}
-    .money-cell .lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);margin-bottom:6px}
-    .money-cell .val{font-size:22px;font-weight:800;color:var(--ink)}
+    .money-cell .lbl{font-size:var(--fs-xs);font-weight:var(--fw-eb);text-transform:uppercase;letter-spacing:.03em;color:var(--muted);margin-bottom:var(--sp-1)}
+    .money-cell .val{font-size:22px;font-weight:var(--fw-eb);color:var(--ink)}
     .money-cell.gold .val{color:var(--gold)}
-    .money-cell .sub{font-size:11.5px;color:var(--muted);margin-top:4px}
+    .money-cell .sub{font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)}
 
     /* Стрик badge */
-    .streak-badge{display:inline-flex;align-items:center;gap:5px;background:var(--gold-soft);color:var(--gold);border:1px solid var(--gold-line);border-radius:999px;padding:4px 10px;font-size:11px;font-weight:800;margin-left:8px}
-    .n-risk-badge{display:inline-flex;align-items:center;gap:5px;background:var(--bad-soft);color:var(--bad);border:1px solid var(--bad-line);border-radius:999px;padding:4px 10px;font-size:11px;font-weight:800;margin-left:8px}
+    .streak-badge{display:inline-flex;align-items:center;gap:5px;background:var(--gold-soft);color:var(--gold);border:1px solid var(--gold-line);border-radius:var(--r-pill);padding:var(--sp-1) var(--sp-3);font-size:var(--fs-xs);font-weight:var(--fw-eb);margin-left:var(--sp-2)}
+    .n-risk-badge{display:inline-flex;align-items:center;gap:5px;background:var(--bad-soft);color:var(--bad);border:1px solid var(--bad-line);border-radius:var(--r-pill);padding:var(--sp-1) var(--sp-3);font-size:var(--fs-xs);font-weight:var(--fw-eb);margin-left:var(--sp-2)}
 
     /* Воронка (кабинет партнёра, вкладки прогноз/тренер) */
-    .funnel-side{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:10px;background:var(--card)}
-    .funnel-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .funnel-side{border:1px solid var(--line);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-3);margin-top:var(--sp-3);background:var(--card)}
+    .funnel-head{display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)}
     .funnel-dot{width:9px;height:9px;border-radius:50%}
-    .funnel-dot.buyer{background:#4A90E2}
+    .funnel-dot.buyer{background:var(--petrol)}
     .funnel-dot.seller{background:var(--ok)}
-    .funnel-title{font-weight:800;font-size:13px}
-    .funnel-stage{display:grid;grid-template-columns:1fr auto;gap:6px;padding:6px 0;border-top:1px solid var(--line-2)}
+    .funnel-title{font-weight:var(--fw-eb);font-size:var(--fs-sm)}
+    .funnel-stage{display:grid;grid-template-columns:1fr auto;gap:var(--sp-1);padding:var(--sp-1) 0;border-top:1px solid var(--line-2)}
     .funnel-stage:first-of-type{border-top:none}
-    .funnel-stage .st-name{font-size:12px;font-weight:600;color:var(--ink-2)}
-    .funnel-stage .st-fp{font-size:11px;font-weight:800;text-align:right}
+    .funnel-stage .st-name{font-size:var(--fs-sm);font-weight:var(--fw-sb);color:var(--ink-2)}
+    .funnel-stage .st-fp{font-size:var(--fs-xs);font-weight:var(--fw-eb);text-align:right}
     .funnel-stage .st-fp .fact{color:var(--ok)}
-    .funnel-stage .st-fp .plan{color:var(--muted);font-weight:500}
-    .funnel-stage .st-bar{grid-column:1/-1;height:6px;background:var(--card-2);border-radius:3px;overflow:hidden;position:relative;margin-top:4px}
+    .funnel-stage .st-fp .plan{color:var(--muted);font-weight:var(--fw-m)}
+    .funnel-stage .st-bar{grid-column:1/-1;height:6px;background:var(--card-2);border-radius:3px;overflow:hidden;position:relative;margin-top:var(--sp-1)}
     .funnel-stage .st-bar>i{display:block;height:100%;border-radius:3px}
     .st-bar .st-fill-fact{background:var(--ok);position:absolute;left:0;top:0}
     .st-bar .st-fill-forecast{background:var(--warn);position:absolute;top:0}
 
     /* Прогноз / цикл-график */
-    .cycle-bars{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:end;height:180px;margin-top:12px}
+    .cycle-bars{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--sp-2);align-items:end;height:180px;margin-top:var(--sp-3)}
     .cycle-col{display:flex;flex-direction:column;align-items:center;gap:5px;height:100%}
-    .cycle-col .cur-tag{font-size:9px;color:var(--petrol);text-transform:uppercase;letter-spacing:.03em;font-weight:800;min-height:12px}
+    .cycle-col .cur-tag{font-size:9px;color:var(--petrol);text-transform:uppercase;letter-spacing:.03em;font-weight:var(--fw-eb);min-height:12px}
     .cycle-col .cur-tag.hidden{opacity:0}
-    .cycle-col .bar-slot{position:relative;flex:1;width:100%;background:#F1F5F9;border-radius:6px;overflow:hidden;min-height:100px}
-    .cycle-col .plan-bar{position:absolute;bottom:0;left:0;right:0;background:repeating-linear-gradient(45deg,#cbd5e1 0,#cbd5e1 4px,#e2e8f0 4px,#e2e8f0 8px);border-radius:6px;opacity:.7}
-    .cycle-col .fact-bar{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,#22C55E,#16A34A);border-radius:6px;display:flex;align-items:flex-start;justify-content:center;padding-top:5px}
-    .cycle-col .fcst-bar{position:absolute;left:0;right:0;background:linear-gradient(180deg,#3B82F6,#1E63D9);border-radius:6px;display:flex;align-items:flex-start;justify-content:center;padding-top:5px}
-    .cycle-col .bar-lbl{color:#fff;font-size:11px;font-weight:800;text-shadow:0 1px 2px rgba(0,0,0,.15)}
-    .cycle-col .val-label{font-size:11px;font-weight:800;color:var(--ink);text-align:center}
-    .cycle-col .mon-label{font-size:10.5px;color:var(--muted);font-weight:700;text-transform:uppercase}
-    .cycle-legend{display:flex;gap:14px;font-size:11px;color:var(--muted);padding:10px 0 4px;border-top:1px dashed var(--line);margin-top:8px;flex-wrap:wrap}
+    .cycle-col .bar-slot{position:relative;flex:1;width:100%;background:var(--card-2);border-radius:var(--r-xs);overflow:hidden;min-height:100px}
+    .cycle-col .plan-bar{position:absolute;bottom:0;left:0;right:0;background:repeating-linear-gradient(45deg,var(--line) 0,var(--line) 4px,var(--line-2) 4px,var(--line-2) 8px);border-radius:var(--r-xs);opacity:.7}
+    .cycle-col .fact-bar{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,var(--ok),#15803d);border-radius:var(--r-xs);display:flex;align-items:flex-start;justify-content:center;padding-top:5px}
+    .cycle-col .fcst-bar{position:absolute;left:0;right:0;background:linear-gradient(180deg,var(--petrol),var(--petrol-deep));border-radius:var(--r-xs);display:flex;align-items:flex-start;justify-content:center;padding-top:5px}
+    .cycle-col .bar-lbl{color:#fff;font-size:var(--fs-xs);font-weight:var(--fw-eb);text-shadow:0 1px 2px rgba(0,0,0,.15)}
+    .cycle-col .val-label{font-size:var(--fs-xs);font-weight:var(--fw-eb);color:var(--ink);text-align:center}
+    .cycle-col .mon-label{font-size:var(--fs-xs);color:var(--muted);font-weight:var(--fw-b);text-transform:uppercase}
+    .cycle-legend{display:flex;gap:var(--sp-3);font-size:var(--fs-xs);color:var(--muted);padding:var(--sp-3) 0 var(--sp-1);border-top:1px dashed var(--line);margin-top:var(--sp-2);flex-wrap:wrap}
     .cycle-legend i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:-1px}
 
     /* Coach */
-    .weak-item{display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--line-2);font-size:12.5px}
+    .weak-item{display:flex;justify-content:space-between;padding:var(--sp-2) 0;border-top:1px solid var(--line-2);font-size:var(--fs-sm)}
     .weak-item:first-of-type{border-top:none}
-    .weak-item .wl{color:var(--bad);font-weight:600}
+    .weak-item .wl{color:var(--bad);font-weight:var(--fw-sb)}
     .weak-item .wr{color:var(--muted)}
 
     /* Задачи (list-row) */
-    .list-row{display:flex;align-items:center;gap:10px;padding:11px 12px;border-bottom:1px solid var(--line-2);cursor:pointer;transition:background .1s}
+    .list-row{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) var(--sp-3);border-bottom:1px solid var(--line-2);cursor:pointer;transition:background var(--transition)}
     .list-row:last-child{border-bottom:none}
     .list-row:hover{background:var(--card-2)}
     .list-row.overdue{background:var(--bad-soft)}
@@ -134,22 +124,29 @@
     .list-row.done .lr-title{text-decoration:line-through}
     .lr-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
     .lr-body{flex:1;min-width:0}
-    .lr-title{font-size:13px;font-weight:600;color:var(--ink);line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .lr-meta{font-size:11px;color:var(--muted);margin-top:2px;display:flex;gap:8px;flex-wrap:wrap}
-    .lr-when{font-weight:600}
-    .lr-when.overdue{color:var(--bad);font-weight:800}
-    .lr-when.today{color:var(--bad);font-weight:800}
-    .lr-when.week{color:var(--warn);font-weight:700}
-    .lr-actions{display:flex;gap:4px;flex-shrink:0}
-    .lr-actions button{width:30px;height:30px;border:none;background:var(--card-2);border-radius:8px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:.1s}
+    .lr-title{font-size:var(--fs-sm);font-weight:var(--fw-sb);color:var(--ink);line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .lr-meta{font-size:var(--fs-xs);color:var(--muted);margin-top:2px;display:flex;gap:var(--sp-2);flex-wrap:wrap}
+    .lr-when{font-weight:var(--fw-sb)}
+    .lr-when.overdue{color:var(--bad);font-weight:var(--fw-eb)}
+    .lr-when.today{color:var(--bad);font-weight:var(--fw-eb)}
+    .lr-when.week{color:var(--warn);font-weight:var(--fw-b)}
+    .lr-actions{display:flex;gap:var(--sp-1);flex-shrink:0}
+    .lr-actions button{width:30px;height:30px;border:none;background:var(--card-2);border-radius:var(--r-sm);cursor:pointer;font-size:var(--fs-sm);display:flex;align-items:center;justify-content:center;transition:background var(--transition)}
     .lr-actions button:hover{background:var(--line)}
     .lr-actions .lr-done{background:var(--ok-soft);color:var(--ok)}
-    .lr-actions .lr-done:hover{background:#B7E4C7}
+    .lr-actions .lr-done:hover{background:var(--ok-line)}
 
-    .task-filters{display:flex;gap:6px;flex-wrap:wrap;padding:12px;background:var(--card-2);border-radius:10px;margin-bottom:12px}
-    .task-filters .lf-btn{font-size:11px;font-weight:700;padding:6px 11px;border:none;background:var(--card);color:var(--muted);border-radius:999px;cursor:pointer;font-family:inherit;transition:.1s}
+    .task-filters{display:flex;gap:var(--sp-1);flex-wrap:wrap;padding:var(--sp-3);background:var(--card-2);border-radius:var(--r-md);margin-bottom:var(--sp-3)}
+    .task-filters .lf-btn{font-size:var(--fs-xs);font-weight:var(--fw-b);padding:var(--sp-1) var(--sp-3);border:none;background:var(--card);color:var(--muted);border-radius:var(--r-pill);cursor:pointer;font-family:inherit;transition:color var(--transition),background var(--transition)}
     .task-filters .lf-btn:hover{color:var(--ink)}
     .task-filters .lf-btn.on{background:var(--petrol);color:#fff}
+
+    /* Адаптивность hero */
+    @media(max-width:480px){
+      .top-inner{gap:var(--sp-2)}
+      .who h1{font-size:var(--fs-base)}
+      .top-btn{min-width:34px;height:34px;font-size:var(--fs-sm)}
+    }
   </style>
 </head>
 <body>
@@ -528,7 +525,7 @@ function prognozCycleCard(pt, d) {
     <div class="muted" style="margin-top:2px">Зелёное — факт закрытых сделок, синее — прогноз, штриховка — план.</div>
     <div class="cycle-bars">${cols}</div>
     <div class="cycle-legend">
-      <span><i style="background:repeating-linear-gradient(45deg,#cbd5e1 0,#cbd5e1 2px,#e2e8f0 2px,#e2e8f0 4px)"></i>план / цель</span>
+      <span><i style="background:repeating-linear-gradient(45deg,var(--line) 0,var(--line) 2px,var(--line-2) 2px,var(--line-2) 4px)"></i>план / цель</span>
       <span><i style="background:linear-gradient(180deg,#22c55e,#16a34a)"></i>факт</span>
       <span><i style="background:linear-gradient(180deg,#3b82f6,#1e63d9)"></i>прогноз</span>
     </div>
@@ -584,7 +581,7 @@ function prognozGoalPathCard(pt, d) {
   months.forEach((m,i) => {
     s += `<text x="${x(i)}" y="${H-12}" text-anchor="middle" font-size="11" fill="#7a8194">${monShort(m.ym)}</text>`;
   });
-  s += `<polyline points="${planAcc.map((v,i)=>`${x(i)},${y(v)}`).join(' ')}" fill="none" stroke="#cbd5e1" stroke-width="2.5" stroke-dasharray="6 5"/>`;
+  s += `<polyline points="${planAcc.map((v,i)=>`${x(i)},${y(v)}`).join(' ')}" fill="none" stroke="var(--line)" stroke-width="2.5" stroke-dasharray="6 5"/>`;
   const fpts = factAcc.map((v,i) => v == null ? null : (months[i] && (months[i].is_past || months[i].is_current) ? [x(i), y(v)] : null)).filter(Boolean);
   if (fpts.length > 1) {
     const area = `${fpts[0][0]},${y(0)} ${fpts.map(p=>p.join(',')).join(' ')} ${fpts[fpts.length-1][0]},${y(0)}`;
@@ -664,7 +661,7 @@ function prognozGoalPathCard(pt, d) {
     <div style="display:flex;gap:14px;font-size:11px;color:var(--muted);margin-top:8px;flex-wrap:wrap">
       <span><i style="display:inline-block;width:11px;height:3px;background:#16a34a;vertical-align:middle;margin-right:5px"></i>факт</span>
       <span><i style="display:inline-block;width:11px;height:3px;background:#3b82f6;vertical-align:middle;margin-right:5px"></i>прогноз (тек. мес + след.)</span>
-      <span><i style="display:inline-block;width:11px;height:3px;background:#cbd5e1;vertical-align:middle;margin-right:5px"></i>план цикла</span>
+      <span><i style="display:inline-block;width:11px;height:3px;background:var(--line);vertical-align:middle;margin-right:5px"></i>план цикла</span>
     </div>
     <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;margin-top:8px">${s}</svg>
     ${posLine}
@@ -693,7 +690,7 @@ function prognozSegmentsCard(pt) {
     <div class="eyebrow">💰 Сделки за цикл по сегментам</div>
     <div class="muted" style="margin-top:2px">Что закрыто за 6 мес. Доход ≈ 48% от вала.</div>
     ${rows}
-    <div style="margin-top:12px;padding:11px 13px;background:var(--ok-soft);border:1px solid #B7E4C7;border-radius:10px;display:flex;justify-content:space-between;align-items:center">
+    <div style="margin-top:12px;padding:11px 13px;background:var(--ok-soft);border:1px solid var(--ok-line);border-radius:10px;display:flex;justify-content:space-between;align-items:center">
       <div><div style="font-size:11px;color:var(--ok);font-weight:800;text-transform:uppercase">ИТОГО ЗА ЦИКЛ</div><div style="font-size:13px;color:var(--muted)">${tot.deals || 0} сделок</div></div>
       <div style="text-align:right"><div style="font-size:19px;font-weight:800;color:var(--ok)">${fmtK(tot.revenue||0)} ₽</div><div style="font-size:12px;color:var(--muted)">≈ ${fmtK(tot.income||0)} ЗП</div></div>
     </div>

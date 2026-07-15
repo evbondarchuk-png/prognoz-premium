@@ -283,7 +283,10 @@ function toggleSheet(open) {
   const shouldOpen = open != null ? open : !opened;
   opened = shouldOpen;
   sheet.classList.toggle('on', shouldOpen);
-  if (shouldOpen) setTimeout(() => document.getElementById('p-input').focus(), 300);
+  if (shouldOpen) {
+    try { ym(110734803, 'params', { event: 'prognosha_chat_opened' }); } catch(_){}
+    setTimeout(() => document.getElementById('p-input').focus(), 300);
+  }
 }
 window.__pClose = () => toggleSheet(false);
 
@@ -365,6 +368,8 @@ function showTyping() {
 // Вопрос → бэкенд askPrognosha (YandexGPT). Если ИИ недоступен — откат на шаблон.
 window.__pAsk = async (q) => {
   addMsg('user', esc(q));
+  try { ym(110734803, 'reachGoal', 'prognosha_question'); } catch(_){}
+  try { ym(110734803, 'params', { event: 'prognosha_question' }); } catch(_){}
   const typing = showTyping();
   try {
     const res = await callPrognosha(q);

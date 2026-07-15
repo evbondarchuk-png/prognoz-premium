@@ -8,6 +8,10 @@
   { "imports": { "https://www.gstatic.com/firebasejs/10.7.0/": "/libs/firebase/10.7.0/" } }
   </script>
   <link rel="stylesheet" href="tokens.css">
+  <!-- Yandex.Metrika counter -->
+  <script type="text/javascript">(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window,document,'script','https://mc.yandex.ru/metrika/tag.js?id=110734803','ym');ym(110734803,'init',{ssr:true,webvisor:true,clickmap:true,accurateTrackBounce:true,trackLinks:true});</script>
+  <noscript><div><img src="https://mc.yandex.ru/watch/110734803" style="position:absolute;left:-9999px;" alt=""></div></noscript>
+  <!-- /Yandex.Metrika counter -->
   <style>
     /* ============ КАРКАС ============ */
     .wrap{max-width:1024px;margin:0 auto;padding-bottom:var(--sp-8)}
@@ -195,6 +199,9 @@ window.__ctx = CTX;
     const res = await httpsCallable(fns, 'getDashboard')({ user_code: targetCode, view: 'partner' });
     d = res.data;
     CTX.data = d;
+    // Yandex.Metrika — цель «Кабинет загружен» + параметры
+    try { ym(110734803, 'reachGoal', 'cabinet_loaded'); } catch(_){}
+    try { ym(110734803, 'userParams', { role: d.user?.role || 'realtor', code: targetCode }); } catch(_){}
   } catch (e) {
     document.getElementById('screen-main').innerHTML =
       `<div class="banner">Не удалось загрузить кабинет: <b>${esc(e.message || String(e))}</b></div>`;
@@ -221,6 +228,7 @@ window.__ctx = CTX;
       const target = t.dataset.tab;
       document.getElementById('screen-' + target).classList.add('on');
       renderTab(target, d);
+      try { ym(110734803, 'params', { tab: target }); } catch(_){}
       window.scrollTo({top: 0, behavior: 'smooth'});
     };
   });
@@ -829,6 +837,7 @@ window.__completeTask = async (taskId, ev) => {
   try {
     const fns = getFunctions(getApp(), 'europe-west1');
     await httpsCallable(fns, 'updateTaskStatus')({ task_id: taskId, status: 'done' });
+    try { ym(110734803, 'reachGoal', 'task_done'); } catch(_){}
     if (row) { row.style.transition = 'opacity .2s'; row.style.opacity = '0'; setTimeout(() => row.remove(), 250); }
   } catch (e) {
     alert('Не удалось: ' + (e.message || e));

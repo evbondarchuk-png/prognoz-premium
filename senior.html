@@ -8,6 +8,10 @@
   { "imports": { "https://www.gstatic.com/firebasejs/10.7.0/": "/libs/firebase/10.7.0/" } }
   </script>
   <link rel="stylesheet" href="tokens.css">
+  <!-- Yandex.Metrika counter -->
+  <script type="text/javascript">(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window,document,'script','https://mc.yandex.ru/metrika/tag.js?id=110734803','ym');ym(110734803,'init',{ssr:true,webvisor:true,clickmap:true,accurateTrackBounce:true,trackLinks:true});</script>
+  <noscript><div><img src="https://mc.yandex.ru/watch/110734803" style="position:absolute;left:-9999px;" alt=""></div></noscript>
+  <!-- /Yandex.Metrika counter -->
   <style>
     .wrap{max-width:1280px;margin:0 auto;padding:0 var(--sp-4) var(--sp-8)}
 
@@ -131,6 +135,9 @@ let TARGET = null;
     if (TARGET) payload.user_code = TARGET;
     const res = await httpsCallable(fns, 'getDashboard')(payload);
     d = res.data;
+    // Yandex.Metrika — цель «Кабинет загружен»
+    try { ym(110734803, 'reachGoal', 'cabinet_loaded'); } catch(_){}
+    try { ym(110734803, 'userParams', { role: me.role, code: me.code, view: VIEW }); } catch(_){}
   } catch (e) {
     document.getElementById('content').innerHTML = `<div class="banner">Не удалось загрузить: ${esc(e.message || String(e))}</div>`;
     console.error(e);
@@ -283,7 +290,7 @@ function teamBlock(d) {
     const factM = m.fact_month || 0;
     const forecastM = m.forecast_month || 0;
     const planPct = planM > 0 ? Math.round(forecastM/planM*100) : 0;
-    return `<tr class="t-row" onclick="location.href='${drillTo}?${drillParam}=${esc(m.code)}'">
+    return `<tr class="t-row" onclick="try{ym(110734803,'params',{event:'drill_down',view:'${VIEW}',target:'${esc(m.code)}'})}catch(_){};location.href='${drillTo}?${drillParam}=${esc(m.code)}'">
       <td>
         <div class="m-name">${esc(m.short_name || m.name || '')}${m.is_newbie ? ' 🌱' : ''}${m.is_group_zero ? ' 🛌' : ''}</div>
         <div class="m-meta">${esc(m.meta || '')}</div>

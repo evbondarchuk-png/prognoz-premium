@@ -55,6 +55,10 @@ GitHub Pages; бэкенд — Firebase Cloud Functions Gen2 (Node 22) + RTDB + 
 
 ## 2. Ресурсы и деплой
 
+> ⚠️ **Реестр фич и деплоев — `~/prognoz-functions/DEPLOYS.md`** (общий бэк!).
+> Перед любой правкой бэка/деплоем свериться с ним. Деплой — только GitHub
+> Actions из origin/main; локальный `firebase deploy` запрещён.
+
 - **Сайт:** `https://premium.prognoz.info` (CNAME → evbondarchuk-png.github.io).
 - **Репо:** `github.com/evbondarchuk-png/prognoz-premium` (Public — нужно для Pages).
   Деплой фронта: `git push` → GitHub Pages (~2 мин). Иногда падает transient-ошибкой —
